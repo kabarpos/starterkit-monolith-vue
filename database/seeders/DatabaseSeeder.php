@@ -6,13 +6,11 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $this->call([
-            RoleAndPermissionSeeder::class,
+            RoleAndPermissionSeeder::class, // Jalankan ini dulu untuk membuat role
+            SuperAdminSeeder::class, // Kemudian buat super admin
         ]);
     }
 }
