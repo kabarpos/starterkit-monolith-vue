@@ -1,6 +1,3 @@
-import defaultTheme from "tailwindcss/defaultTheme";
-import forms from "@tailwindcss/forms";
-
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
@@ -9,14 +6,16 @@ export default {
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.vue",
     ],
-
     theme: {
         extend: {
+            colors: {
+                primary: "#0B2447",
+                secondary: "#19376D",
+            },
             fontFamily: {
-                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+                sans: ["Inter", "sans-serif"],
             },
         },
     },
-
-    plugins: [forms],
+    plugins: [require("@tailwindcss/forms")],
 };

@@ -7,7 +7,7 @@
     },
     "devDependencies": {
         "@inertiajs/vue3": "^2.0.3",
-        "@tailwindcss/forms": "^0.5.3",
+        "@tailwindcss/forms": "^0.5.10",
         "@vitejs/plugin-vue": "^5.0.0",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
@@ -20,7 +20,10 @@
     },
     "dependencies": {
         "@heroicons/vue": "^2.2.0",
+        "apexcharts": "^4.4.0",
+        "chart.js": "^4.4.7",
         "vee-validate": "^4.15.0",
-        "vue-loading-overlay": "^6.0.6"
+        "vue-loading-overlay": "^6.0.6",
+        "vue3-apexcharts": "^1.8.0"
     }
 }
