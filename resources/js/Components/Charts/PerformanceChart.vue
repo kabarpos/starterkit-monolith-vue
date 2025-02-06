@@ -53,7 +53,6 @@ const series = ref(props.data.segments.map((segment) => segment.percentage));
 
 <template>
     <apexchart
-        height="350"
         type="donut"
         :options="chartOptions"
         :series="series"

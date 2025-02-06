@@ -97,8 +97,6 @@ const performanceData = {
         { name: "Percentage", percentage: 16 },
     ],
 };
-
-const selectedPeriod = ref("January 2024 - May 2024");
 </script>
 
 <template>
@@ -109,24 +107,17 @@ const selectedPeriod = ref("January 2024 - May 2024");
             <!-- Header & Period Selector -->
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">
+                    <h1 class="text-xl md:text-2xl font-semibold text-gray-900">
                         Dashboard
                     </h1>
                     <p class="text-gray-500 mt-1">
                         An any way to manage sales with care and precision.
                     </p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button
-                        class="px-4 py-2 bg-white rounded-lg border shadow-sm hover:bg-gray-50"
-                    >
-                        {{ selectedPeriod }}
-                    </button>
-                </div>
             </div>
 
             <!-- Update Card -->
-            <div class="bg-[#0B2447] rounded-lg p-6 text-white">
+            <div class="bg-[#0B2447] rounded-lg p-6 text-white w-full">
                 <div class="flex items-start justify-between">
                     <div>
                         <div class="flex items-center space-x-2">

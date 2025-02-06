@@ -6,7 +6,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 <template>
     <div class="min-h-screen bg-gray-100">
         <nav class="bg-white border-b border-gray-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 sm:max-w-7xl">
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <!-- Logo -->

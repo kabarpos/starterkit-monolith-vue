@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from "vue";
+
+const isSidebarOpen = ref(false);
 import { Link } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {
@@ -12,8 +14,6 @@ import {
     ShieldCheckIcon,
     Bars3Icon,
 } from "@heroicons/vue/24/outline";
-
-const showingNavigationDropdown = ref(false);
 
 // Navigation Links
 const navigation = [
@@ -50,9 +50,12 @@ defineProps({
 <template>
     <div class="min-h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 flex w-64 flex-col bg-[#0B2447]">
+        <div
+            class="fixed inset-y-0 w-64 flex-col bg-[#0B2447]"
+            :class="{ 'hidden md:flex': !isSidebarOpen, flex: isSidebarOpen }"
+        >
             <!-- Sidebar header -->
-            <div class="flex h-16 shrink-0 items-center px-6">
+            <div class="flex h-16 shrink-0 items-center px-6 z-50">
                 <ApplicationLogo class="h-8 w-auto text-white" />
                 <span class="ml-2 text-xl font-semibold text-white"
                     >Siohioma</span
@@ -140,31 +143,20 @@ defineProps({
         </div>
 
         <!-- Main content -->
-        <div class="pl-64">
+        <div class="md:pl-64">
             <!-- Top header -->
-            <div class="sticky top-0 z-10 bg-white shadow">
+            <div class="sticky top-0 z-10 bg-white shadow md:hidden">
                 <div class="flex h-16 items-center justify-between px-6">
-                    <!-- Left side -->
-                    <div class="flex items-center">
-                        <h1 class="text-2xl font-semibold text-gray-900">
-                            Sales Admin
-                        </h1>
-                    </div>
-
-                    <!-- Right side -->
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <input
-                                type="text"
-                                placeholder="Search anything in Siohioma..."
-                                class="w-64 rounded-lg border border-gray-300 py-2 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
+                    <div class="flex items-center justify-between w-full">
                         <button
-                            class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                            @click="isSidebarOpen = !isSidebarOpen"
+                            class="rounded-md p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
                         >
-                            Add new product
+                            <span class="sr-only">Open sidebar</span>
+                            <Bars3Icon class="h-6 w-6" aria-hidden="true" />
                         </button>
+                        <ApplicationLogo class="h-8 w-auto text-white" />
+                        <span class="sr-only">Siohioma</span>
                     </div>
                 </div>
             </div>
@@ -173,38 +165,6 @@ defineProps({
             <main class="py-6 px-6">
                 <slot />
             </main>
-        </div>
-
-        <!-- Mobile menu button -->
-        <div class="fixed bottom-4 right-4 md:hidden">
-            <button
-                @click="showingNavigationDropdown = !showingNavigationDropdown"
-                class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg"
-            >
-                <Bars3Icon class="h-6 w-6" />
-            </button>
-        </div>
-
-        <!-- Mobile menu -->
-        <div
-            v-show="showingNavigationDropdown"
-            class="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 md:hidden"
-            @click="showingNavigationDropdown = false"
-        >
-            <div class="fixed inset-y-0 right-0 w-64 bg-white p-6">
-                <!-- Mobile menu content -->
-                <nav class="space-y-4">
-                    <template v-for="item in navigation" :key="item.name">
-                        <Link
-                            :href="item.href"
-                            class="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
-                        >
-                            <component :is="item.icon" class="h-5 w-5" />
-                            <span>{{ item.name }}</span>
-                        </Link>
-                    </template>
-                </nav>
-            </div>
         </div>
     </div>
 </template>

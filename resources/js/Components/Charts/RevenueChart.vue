@@ -12,7 +12,7 @@ const props = defineProps({
 const chartOptions = ref({
     chart: {
         type: "bar",
-        height: 350,
+        // height: 350,
         toolbar: {
             show: false,
         },
@@ -76,9 +76,5 @@ const series = ref([
 </script>
 
 <template>
-    <apexchart
-        height="350"
-        :options="chartOptions"
-        :series="series"
-    ></apexchart>
+    <apexchart :options="chartOptions" :series="series"></apexchart>
 </template>
