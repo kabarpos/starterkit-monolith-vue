@@ -32,7 +32,7 @@ const validateForm = () => {
 
 const submit = () => {
     if (validateForm()) {
-        form.post(route("password.email"));
+        form.post("/forgot-password");
     }
 };
 </script>
@@ -102,7 +102,7 @@ const submit = () => {
                     <p class="text-center text-sm text-gray-600">
                         Remember your password?
                         <Link
-                            :href="route('login')"
+                            href="/login"
                             class="font-medium text-indigo-600 hover:text-indigo-500"
                         >
                             Back to login

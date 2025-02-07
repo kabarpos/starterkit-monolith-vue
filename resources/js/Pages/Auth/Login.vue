@@ -12,7 +12,7 @@ const form = useForm({
 
 const submit = () => {
     if (validateForm()) {
-        form.post(route("login"), {
+        form.post("/login", {
             onFinish: () => form.reset("password"),
         });
     }
@@ -117,7 +117,7 @@ const validateForm = () => {
                     </label>
 
                     <Link
-                        :href="route('password.request')"
+                        href="/forgot-password"
                         class="text-sm text-indigo-600 hover:text-indigo-500"
                     >
                         Forgot password?
@@ -138,7 +138,7 @@ const validateForm = () => {
                     <p class="text-center text-sm text-gray-600">
                         Don't have an account?
                         <Link
-                            :href="route('register')"
+                            href="/register"
                             class="font-medium text-indigo-600 hover:text-indigo-500"
                         >
                             Sign up
