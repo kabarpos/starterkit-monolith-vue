@@ -55,56 +55,66 @@ defineProps({
             :class="{ 'hidden md:flex': !isSidebarOpen, flex: isSidebarOpen }"
         >
             <!-- Sidebar header -->
-            <div class="flex h-16 shrink-0 items-center px-6 z-50">
+            <div class="flex h-16 shrink-0 items-center px-6">
                 <ApplicationLogo class="h-8 w-auto text-white" />
                 <span class="ml-2 text-xl font-semibold text-white"
                     >Siohioma</span
                 >
             </div>
-
+            <hr class="border-gray-600" />
             <!-- Sidebar content -->
             <div class="flex flex-1 flex-col overflow-y-auto">
-                <nav class="flex-1 space-y-1 px-4 py-4">
-                    <p class="px-2 text-sm font-semibold text-gray-400">MENU</p>
+                <nav class="flex-1 px-4 py-4 gap-10">
+                    <div class="mt-4">
+                        <p
+                            class="px-2 text-sm font-semibold text-gray-400 mb-4"
+                        >
+                            DASHBOARD
+                        </p>
 
-                    <!-- Navigation Items -->
-                    <div class="space-y-1">
-                        <template v-for="item in navigation" :key="item.name">
-                            <Link
-                                :href="item.href"
-                                :class="[
-                                    item.current
-                                        ? 'bg-[#19376D] text-white'
-                                        : 'text-gray-300 hover:bg-[#19376D] hover:text-white',
-                                    'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-                                ]"
+                        <!-- Navigation Items -->
+                        <div class="mt-2">
+                            <template
+                                v-for="item in navigation"
+                                :key="item.name"
                             >
-                                <component
-                                    :is="item.icon"
+                                <Link
+                                    :href="item.href"
                                     :class="[
                                         item.current
-                                            ? 'text-white'
-                                            : 'text-gray-400 group-hover:text-white',
-                                        'mr-3 flex-shrink-0 h-6 w-6',
+                                            ? 'bg-[#19376D] text-white'
+                                            : 'text-gray-300 hover:bg-[#19376D] hover:text-white',
+                                        'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
                                     ]"
-                                />
-                                {{ item.name }}
-                                <span
-                                    v-if="item.count"
-                                    class="ml-auto inline-block py-0.5 px-2 text-xs rounded-full bg-green-500 text-white"
                                 >
-                                    {{ item.count }}
-                                </span>
-                            </Link>
-                        </template>
+                                    <component
+                                        :is="item.icon"
+                                        :class="[
+                                            item.current
+                                                ? 'text-white'
+                                                : 'text-gray-400 group-hover:text-white',
+                                            'mr-3 flex-shrink-0 h-6 w-6',
+                                        ]"
+                                    />
+                                    {{ item.name }}
+                                    <span
+                                        v-if="item.count"
+                                        class="ml-auto inline-block py-0.5 px-2 text-xs rounded-full bg-green-500 text-white"
+                                    >
+                                        {{ item.count }}
+                                    </span>
+                                </Link>
+                            </template>
+                        </div>
                     </div>
-
                     <!-- General Section -->
                     <div class="mt-8">
-                        <p class="px-2 text-sm font-semibold text-gray-400">
-                            GENERAL
+                        <p
+                            class="px-2 text-sm font-semibold text-gray-400 mb-4"
+                        >
+                            ADMIN AREA
                         </p>
-                        <div class="mt-2 space-y-1">
+                        <div class="mt-2">
                             <template v-for="item in general" :key="item.name">
                                 <Link
                                     :href="item.href"
