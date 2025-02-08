@@ -2,7 +2,7 @@
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Create New User</h2>
+                <h2 class="font-semibold text-2xl text-gray-800 leading-tight">Tambah User Baru</h2>
             </div>
         </template>
 
@@ -13,13 +13,13 @@
                         <form @submit.prevent="submit" class="space-y-6">
                             <!-- Name -->
                             <div>
-                                <InputLabel for="name" value="Full Name" class="text-gray-700 text-sm font-bold" />
+                                <InputLabel for="name" value="Nama Lengkap" class="text-gray-700 text-sm font-bold" />
                                 <TextInput
                                     id="name"
                                     type="text"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
                                     v-model="form.name"
-                                    placeholder="Enter user's full name"
+                                    placeholder="Masukkan nama lengkap"
                                     required
                                     autofocus
                                 />
@@ -28,13 +28,13 @@
 
                             <!-- Email -->
                             <div>
-                                <InputLabel for="email" value="Email Address" class="text-gray-700 text-sm font-bold" />
+                                <InputLabel for="email" value="Alamat Email" class="text-gray-700 text-sm font-bold" />
                                 <TextInput
                                     id="email"
                                     type="email"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
                                     v-model="form.email"
-                                    placeholder="Enter user's email address"
+                                    placeholder="Masukkan alamat email"
                                     required
                                 />
                                 <InputError class="mt-2" :message="form.errors.email" />
@@ -42,16 +42,16 @@
 
                             <!-- WhatsApp -->
                             <div>
-                                <InputLabel for="phone" value="WhatsApp Number" class="text-gray-700 text-sm font-bold" />
+                                <InputLabel for="phone" value="Nomor WhatsApp" class="text-gray-700 text-sm font-bold" />
                                 <TextInput
                                     id="phone"
                                     type="text"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
                                     v-model="form.phone"
-                                    placeholder="Enter WhatsApp number (e.g. 081234567890)"
+                                    placeholder="Contoh: 081234567890"
                                     required
                                 />
-                                <p class="mt-1 text-sm text-gray-500">Format: 08xx-xxxx-xxxx (Indonesian format)</p>
+                                <p class="mt-1 text-sm text-gray-500">Format: 08xx-xxxx-xxxx (format Indonesia)</p>
                                 <InputError class="mt-2" :message="form.errors.phone" />
                             </div>
 
@@ -61,9 +61,9 @@
                                 <TextInput
                                     id="password"
                                     type="password"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
                                     v-model="form.password"
-                                    placeholder="Enter password"
+                                    placeholder="Masukkan password"
                                     required
                                 />
                                 <InputError class="mt-2" :message="form.errors.password" />
@@ -71,20 +71,20 @@
 
                             <!-- Confirm Password -->
                             <div>
-                                <InputLabel for="password_confirmation" value="Confirm Password" class="text-gray-700 text-sm font-bold" />
+                                <InputLabel for="password_confirmation" value="Konfirmasi Password" class="text-gray-700 text-sm font-bold" />
                                 <TextInput
                                     id="password_confirmation"
                                     type="password"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
                                     v-model="form.password_confirmation"
-                                    placeholder="Confirm password"
+                                    placeholder="Konfirmasi password"
                                     required
                                 />
                             </div>
 
                             <!-- Roles -->
                             <div>
-                                <InputLabel value="User Roles" class="text-gray-700 text-sm font-bold mb-3" />
+                                <InputLabel value="Role User" class="text-gray-700 text-sm font-bold mb-3" />
                                 <div class="mt-2 space-y-3 bg-gray-50 p-4 rounded-lg">
                                     <div v-for="role in roles" :key="role.id" class="flex items-center">
                                         <input
@@ -92,7 +92,7 @@
                                             :id="'role_' + role.id"
                                             v-model="form.roles"
                                             :value="role.id"
-                                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                            class="w-4 h-4 text-[#0B2447] border-gray-300 rounded focus:ring-[#19376D]"
                                         />
                                         <label :for="'role_' + role.id" class="ml-3 text-sm font-medium text-gray-700">
                                             {{ role.name }}
@@ -106,16 +106,16 @@
                             <div class="flex items-center justify-end gap-4 pt-4 border-t">
                                 <Link
                                     :href="route('admin.users.index')"
-                                    class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#19376D] focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
                                 >
-                                    Cancel
+                                    Batal
                                 </Link>
                                 <PrimaryButton 
                                     :class="{ 'opacity-25': form.processing }" 
                                     :disabled="form.processing"
-                                    class="bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900"
+                                    class="bg-[#0B2447] hover:bg-[#19376D] focus:bg-[#19376D]"
                                 >
-                                    Create User
+                                    Simpan User
                                 </PrimaryButton>
                             </div>
                         </form>

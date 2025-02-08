@@ -1,20 +1,22 @@
 <template>
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Edit Role</h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-2xl text-gray-800 leading-tight">Edit Role</h2>
+            </div>
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+                    <div class="p-8">
                         <form @submit.prevent="submit" class="space-y-6">
                             <div>
-                                <InputLabel for="name" value="Name" />
+                                <InputLabel for="name" value="Nama Role" class="text-gray-700 text-sm font-bold" />
                                 <TextInput
                                     id="name"
                                     type="text"
-                                    class="mt-1 block w-full"
+                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
                                     v-model="form.name"
                                     required
                                     autofocus
@@ -23,33 +25,44 @@
                             </div>
 
                             <div>
-                                <InputLabel value="Permissions" />
-                                <div class="mt-2 space-y-2">
-                                    <div v-for="permission in permissions" :key="permission.id" class="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            :id="'permission_' + permission.id"
-                                            v-model="form.permissions"
-                                            :value="permission.id"
-                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                        />
-                                        <label :for="'permission_' + permission.id" class="ml-2 text-sm text-gray-600">
-                                            {{ permission.name }}
-                                        </label>
+                                <InputLabel value="Permissions" class="text-gray-700 text-sm font-bold" />
+                                <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                                    <div v-for="permission in permissions" :key="permission.id" class="flex items-start">
+                                        <div class="flex items-center h-5">
+                                            <input
+                                                type="checkbox"
+                                                :id="'permission_' + permission.id"
+                                                v-model="form.permissions"
+                                                :value="permission.id"
+                                                class="w-4 h-4 text-[#0B2447] border-gray-300 rounded focus:ring-[#19376D]"
+                                            />
+                                        </div>
+                                        <div class="ml-3">
+                                            <label :for="'permission_' + permission.id" class="text-sm font-medium text-gray-700">
+                                                {{ permission.name }}
+                                            </label>
+                                            <p class="text-xs text-gray-500">
+                                                {{ getPermissionDescription(permission.name) }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <InputError class="mt-2" :message="form.errors.permissions" />
                             </div>
 
-                            <div class="flex items-center justify-end">
+                            <div class="flex items-center justify-end gap-4 pt-4 border-t">
                                 <Link
                                     :href="route('admin.roles.index')"
-                                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#19376D] focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
                                 >
-                                    Cancel
+                                    Batal
                                 </Link>
-                                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                    Update Role
+                                <PrimaryButton 
+                                    :class="{ 'opacity-25': form.processing }" 
+                                    :disabled="form.processing"
+                                    class="bg-[#0B2447] hover:bg-[#19376D] focus:bg-[#19376D]"
+                                >
+                                    Simpan Perubahan
                                 </PrimaryButton>
                             </div>
                         </form>
@@ -77,6 +90,20 @@ const form = useForm({
     name: props.role.name,
     permissions: props.role.permissions
 });
+
+const getPermissionDescription = (permission) => {
+    const descriptions = {
+        'view users': 'Dapat melihat daftar semua pengguna dalam sistem',
+        'create users': 'Dapat membuat pengguna baru dalam sistem',
+        'edit users': 'Dapat mengubah informasi pengguna yang ada',
+        'delete users': 'Dapat menghapus pengguna dari sistem',
+        'view roles': 'Dapat melihat daftar semua role',
+        'create roles': 'Dapat membuat role baru',
+        'edit roles': 'Dapat mengubah role yang ada',
+        'delete roles': 'Dapat menghapus role dari sistem'
+    };
+    return descriptions[permission] || permission;
+};
 
 const submit = () => {
     form.put(route('admin.roles.update', props.role.id));
