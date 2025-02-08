@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { Link, router } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {
@@ -51,18 +51,31 @@ const general = [
     { name: "Security", href: "#", icon: ShieldCheckIcon, current: false },
 ];
 
-const user = {
-    name: "Fandaww Punx",
-    email: "fandaww6@gmail.com",
-    imageUrl: "images/user-avatar.jpg",
-};
+const props = defineProps({
+    auth: {
+        type: Object,
+        required: true
+    }
+});
+
+onMounted(() => {
+    console.log('Auth Data:', props.auth);
+    console.log('User Data:', props.auth?.user);
+    console.log('User Roles:', props.auth?.user?.roles);
+});
 
 const logout = () => {
     router.post(route('logout'));
 };
 
-defineProps({
-    auth: Object,
+// Computed untuk mengecek role admin
+const isAdmin = computed(() => {
+    return props.auth?.user?.roles?.some(role => role === 'admin');
+});
+
+// Computed untuk user data
+const userData = computed(() => {
+    return props.auth?.user;
 });
 </script>
 
@@ -82,103 +95,100 @@ defineProps({
             </div>
             <hr class="border-gray-600" />
             <!-- Sidebar content -->
-            <div class="flex flex-1 flex-col overflow-y-auto">
-                <nav class="flex-1 px-4 py-4 gap-10">
-                    <div class="mt-4">
-                        <p
-                            class="px-2 text-sm font-semibold text-gray-400 mb-4"
-                        >
-                            DASHBOARD
-                        </p>
-
-                        <!-- Navigation Items -->
-                        <div class="mt-2">
-                            <template
-                                v-for="item in navigation"
-                                :key="item.name"
-                            >
-                                <Link
-                                    :href="item.href"
-                                    :class="[
-                                        item.current
-                                            ? 'bg-[#19376D] text-white'
-                                            : 'text-gray-300 hover:bg-[#19376D] hover:text-white',
-                                        'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-                                    ]"
-                                >
-                                    <component
-                                        :is="item.icon"
+            <div class="flex flex-1 flex-col overflow-y-auto custom-scrollbar">
+                <nav class="flex-1 px-4 py-4">
+                    <!-- Dashboard Section -->
+                    <div class="space-y-8">
+                        <div>
+                            <p class="px-2 text-sm font-semibold text-gray-400 mb-4">
+                                DASHBOARD
+                            </p>
+                            <div class="space-y-1">
+                                <template v-for="item in navigation" :key="item.name">
+                                    <Link
+                                        :href="item.href"
                                         :class="[
                                             item.current
-                                                ? 'text-white'
-                                                : 'text-gray-400 group-hover:text-white',
-                                            'mr-3 flex-shrink-0 h-6 w-6',
+                                                ? 'bg-[#19376D] text-white'
+                                                : 'text-gray-300 hover:bg-[#19376D] hover:text-white',
+                                            'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
                                         ]"
-                                    />
-                                    {{ item.name }}
-                                    <span
-                                        v-if="item.count"
-                                        class="ml-auto inline-block py-0.5 px-2 text-xs rounded-full bg-green-500 text-white"
                                     >
-                                        {{ item.count }}
-                                    </span>
-                                </Link>
-                            </template>
+                                        <component
+                                            :is="item.icon"
+                                            :class="[
+                                                item.current
+                                                    ? 'text-white'
+                                                    : 'text-gray-400 group-hover:text-white',
+                                                'mr-3 flex-shrink-0 h-6 w-6',
+                                            ]"
+                                        />
+                                        {{ item.name }}
+                                        <span
+                                            v-if="item.count"
+                                            class="ml-auto inline-block py-0.5 px-2 text-xs rounded-full bg-green-500 text-white"
+                                        >
+                                            {{ item.count }}
+                                        </span>
+                                    </Link>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Admin Section -->
+                        <div v-if="isAdmin">
+                            <p class="px-2 text-sm font-semibold text-gray-400 mb-4">
+                                ADMIN AREA
+                            </p>
+                            <div class="space-y-1">
+                                <template v-for="item in admin" :key="item.name">
+                                    <Link
+                                        :href="item.href"
+                                        class="text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                    >
+                                        <component
+                                            :is="item.icon"
+                                            class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6"
+                                        />
+                                        {{ item.name }}
+                                    </Link>
+                                </template>
+                            </div>
                         </div>
                     </div>
-                    <!-- Admin Section -->
-                    <div class="mt-8">
-                        <p
-                            class="px-2 text-sm font-semibold text-gray-400 mb-4"
-                        >
-                            ADMIN AREA
-                        </p>
-                        <div class="mt-2">
-                            <template v-for="item in admin" :key="item.name">
-                                <Link
-                                    :href="item.href"
-                                    class="text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                                >
-                                    <component
-                                        :is="item.icon"
-                                        class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6"
-                                    />
-                                    {{ item.name }}
-                                </Link>
-                            </template>
-                        </div>
-                    </div>
-    
                 </nav>
 
-                <!-- Logout Button -->
-                <div class="px-4 mb-2">
-                    <button
-                        @click="logout"
-                        class="w-full text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Logout
-                    </button>
-                </div>
+                <!-- Bottom Section -->
+                <div class="mt-auto">
+                    <!-- Logout Button -->
+                    <div class="px-4 mb-2">
+                        <button
+                            @click="logout"
+                            class="w-full text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
 
-                <!-- User Profile -->
-                <div class="border-t border-gray-700 p-4">
-                    <div class="flex items-center">
-                        <img
-                            class="h-8 w-8 rounded-full"
-                            :src="user.imageUrl"
-                            :alt="user.name"
-                        />
-                        <div class="ml-3">
-                            <p class="text-sm font-medium text-white">
-                                {{ user.name }}
-                            </p>
-                            <p class="text-xs text-gray-400">
-                                {{ user.email }}
-                            </p>
+                    <!-- User Profile -->
+                    <div v-if="userData" class="border-t border-gray-700 p-4">
+                        <div class="flex items-center">
+                            <img
+                                class="h-8 w-8 rounded-full object-cover"
+                                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random&color=fff`"
+                                :alt="userData.name"
+                            />
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-white">
+                                    {{ userData.name }}
+                                </p>
+                                <p class="text-xs text-gray-400">
+                                    {{ userData.email }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -214,3 +224,27 @@ defineProps({
         </div>
     </div>
 </template>
+
+<style scoped>
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+</style>

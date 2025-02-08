@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :auth="auth">
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">Manajemen User</h2>
@@ -255,7 +255,14 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 
 const props = defineProps({
-    users: Array
+    auth: {
+        type: Object,
+        required: true
+    },
+    users: {
+        type: Array,
+        required: true
+    }
 });
 
 const search = ref('');
