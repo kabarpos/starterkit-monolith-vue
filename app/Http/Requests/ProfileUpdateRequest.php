@@ -25,6 +25,22 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'phone' => ['required', 'string', 'max:15', 'regex:/^08[0-9]{9,11}$/'],
+            'avatar' => ['nullable', 'image', 'max:2048'], // Max 2MB
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'phone.regex' => 'Format nomor WhatsApp tidak valid. Gunakan format: 08xx-xxxx-xxxx',
+            'avatar.image' => 'File harus berupa gambar (JPG, PNG, GIF)',
+            'avatar.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
         ];
     }
 }

@@ -31,21 +31,46 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            'auth' => [
-                'user' => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'phone' => $request->user()->phone,
-                    'roles' => $request->user()?->roles->pluck('name'),
-                    'status' => $request->user()->status,
-                ] : null,
+            'auth' => $this->getAuthData($request),
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'),
+                'error' => fn () => $request->session()->get('error'),
+                'success' => fn () => $request->session()->get('success'),
+                'warning' => fn () => $request->session()->get('warning'),
+            ],
+            'app' => [
+                'name' => config('app.name'),
+                'env' => config('app.env'),
+                'url' => config('app.url'),
             ],
             'ziggy' => [
                 'location' => $request->url(),
             ],
-            'flash' => [
-                'message' => fn () => $request->session()->get('message')
+        ];
+    }
+
+    protected function getAuthData(Request $request): array
+    {
+        if (!$request->user()) {
+            return [
+                'user' => null,
+            ];
+        }
+
+        $user = $request->user();
+
+        return [
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'avatar_url' => $user->avatar_url,
+                'roles' => $user->roles->pluck('name'),
+                'permissions' => $user->getAllPermissions()->pluck('name'),
+                'status' => $user->status,
+                'email_verified_at' => $user->email_verified_at,
+                'last_login_at' => $user->last_login_at?->diffForHumans(),
             ],
         ];
     }

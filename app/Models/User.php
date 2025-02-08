@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -24,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'avatar',
         'status',
         'status_reason',
         'approved_at',
@@ -42,6 +44,19 @@ class User extends Authenticatable
         'last_login_at' => 'datetime',
         'approved_at' => 'datetime',
     ];
+
+    protected $appends = [
+        'avatar_url',
+    ];
+
+    // Accessor untuk avatar URL
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            return Storage::disk('public')->url($this->avatar);
+        }
+        return '/default-avatar.png';
+    }
 
     // Relationships
     public function approvedBy()

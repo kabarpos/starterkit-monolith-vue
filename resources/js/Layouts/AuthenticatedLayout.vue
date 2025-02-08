@@ -14,6 +14,7 @@ import {
 } from "@heroicons/vue/24/outline";
 
 const isSidebarOpen = ref(false);
+const isProfileMenuOpen = ref(false);
 
 // Navigation Links
 const navigation = [
@@ -188,16 +189,63 @@ const userData = computed(() => {
                         <div class="flex items-center">
                             <img
                                 class="h-8 w-8 rounded-full object-cover"
-                                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random&color=fff`"
+                                :src="userData.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random&color=fff`"
                                 :alt="userData.name"
                             />
-                            <div class="ml-3">
-                                <p class="text-sm font-medium text-white">
-                                    {{ userData.name }}
-                                </p>
-                                <p class="text-xs text-gray-400">
-                                    {{ userData.email }}
-                                </p>
+                            <div class="relative ml-3 flex-grow">
+                                <div class="group">
+                                    <button 
+                                        class="flex items-center justify-between w-full text-left"
+                                        @click="isProfileMenuOpen = !isProfileMenuOpen"
+                                    >
+                                        <div>
+                                            <p class="text-sm font-medium text-white">
+                                                {{ userData.name }}
+                                            </p>
+                                            <p class="text-xs text-gray-400">
+                                                {{ userData.email }}
+                                            </p>
+                                        </div>
+                                        <svg 
+                                            class="h-5 w-5 text-gray-400" 
+                                            :class="{ 'rotate-180': isProfileMenuOpen }"
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            viewBox="0 0 20 20" 
+                                            fill="currentColor"
+                                        >
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    
+                                    <!-- Profile Dropdown Menu -->
+                                    <div 
+                                        v-show="isProfileMenuOpen"
+                                        class="absolute bottom-full left-0 right-0 mb-2 bg-[#19376D] rounded-md shadow-lg py-1 z-50 transform origin-bottom-left"
+                                    >
+                                        <Link
+                                            :href="route('profile.edit')"
+                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-[#0B2447] hover:text-white transition-colors duration-150"
+                                        >
+                                            <div class="flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                                Edit Profile
+                                            </div>
+                                        </Link>
+                                        <button
+                                            @click="logout"
+                                            class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-[#0B2447] hover:text-white transition-colors duration-150"
+                                        >
+                                            <div class="flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                </svg>
+                                                Logout
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
