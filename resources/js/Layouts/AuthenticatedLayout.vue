@@ -70,7 +70,17 @@ const logout = () => {
 
 // Computed untuk mengecek role admin
 const isAdmin = computed(() => {
-    return props.auth?.user?.roles?.some(role => role === 'admin');
+    const roles = props.auth?.user?.roles || [];
+    console.log('Checking admin role:', roles);
+    
+    if (!roles || !Array.isArray(roles)) {
+        console.log('No roles or invalid roles format');
+        return false;
+    }
+    
+    const hasAdminRole = roles.includes('admin');
+    console.log('Has admin role:', hasAdminRole);
+    return hasAdminRole;
 });
 
 // Computed untuk user data
@@ -232,7 +242,7 @@ const userData = computed(() => {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -241,7 +251,7 @@ const userData = computed(() => {
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {

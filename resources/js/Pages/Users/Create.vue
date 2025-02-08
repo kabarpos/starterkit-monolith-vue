@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :auth="auth">
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">Tambah User Baru</h2>
@@ -135,6 +135,10 @@ import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
+    auth: {
+        type: Object,
+        required: true
+    },
     roles: Array
 });
 

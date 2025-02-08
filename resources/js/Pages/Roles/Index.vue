@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :auth="auth">
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">Manajemen Role</h2>
@@ -129,6 +129,10 @@ import { Link, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
 const props = defineProps({
+    auth: {
+        type: Object,
+        required: true
+    },
     roles: Array
 });
 

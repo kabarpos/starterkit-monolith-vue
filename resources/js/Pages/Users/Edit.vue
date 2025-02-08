@@ -1,5 +1,5 @@
 <template>
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :auth="auth">
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">Edit User</h2>
@@ -150,6 +150,10 @@ import { Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const props = defineProps({
+    auth: {
+        type: Object,
+        required: true
+    },
     user: Object,
     roles: Array
 });

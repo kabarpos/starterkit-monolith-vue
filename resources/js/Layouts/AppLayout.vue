@@ -1,22 +1,16 @@
 <template>
-    <div>
-        <header>
-            <!-- Navigation -->
-            <nav>
-                <!-- Navigation content -->
-            </nav>
-        </header>
-
-        <main>
-            <slot />
-        </main>
-
-        <footer>
-            <!-- Footer content -->
-        </footer>
-    </div>
+    <AuthenticatedLayout :auth="auth">
+        <slot />
+    </AuthenticatedLayout>
 </template>
 
 <script setup>
-// Component logic here
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
+defineProps({
+    auth: {
+        type: Object,
+        required: true
+    }
+});
 </script>
