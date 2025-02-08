@@ -10,9 +10,8 @@ class RoleAndPermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create roles
-        $adminRole = Role::create(['name' => 'admin']);
-        $userRole = Role::create(['name' => 'user']);
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create permissions
         $permissions = [
@@ -20,14 +19,21 @@ class RoleAndPermissionSeeder extends Seeder
             'create users',
             'edit users',
             'delete users',
-            // Add more permissions
+            'view roles',
+            'create roles',
+            'edit roles',
+            'delete roles',
         ];
 
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
 
-        // Assign all permissions to admin role
+        // Create roles and assign permissions
+        $adminRole = Role::create(['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
+
+        $userRole = Role::create(['name' => 'user']);
+        $userRole->givePermissionTo(['view users']);
     }
 }

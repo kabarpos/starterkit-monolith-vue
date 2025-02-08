@@ -27,10 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Admin Routes
-    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         // Users Management
         Route::resource('users', UserController::class);
-        // Roles & Permissions
+        // Roles Management
         Route::resource('roles', RoleController::class);
     });
 });

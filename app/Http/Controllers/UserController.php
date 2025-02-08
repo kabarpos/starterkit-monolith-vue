@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
@@ -13,23 +12,23 @@ class UserController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Admin/Users/Index', [
+        return Inertia::render('Users/Index', [
             'users' => User::with('roles')
                 ->orderBy('created_at', 'desc')
-                ->paginate(10)
-                ->through(fn ($user) => [
+                ->get()
+                ->map(fn ($user) => [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
                     'roles' => $user->roles->pluck('name'),
                     'created_at' => $user->created_at->format('d M Y')
-                ]),
+                ])
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Admin/Users/Create', [
+        return Inertia::render('Users/Create', [
             'roles' => Role::all()->map->only(['id', 'name']),
         ]);
     }
@@ -39,7 +38,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed'],
             'roles' => 'required|array',
         ]);
 
@@ -49,7 +48,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole($request->roles);
+        $user->syncRoles($request->roles);
 
         return redirect()->route('admin.users.index')
             ->with('message', 'User created successfully');
@@ -57,7 +56,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return Inertia::render('Admin/Users/Edit', [
+        return Inertia::render('Users/Edit', [
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,

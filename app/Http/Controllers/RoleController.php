@@ -11,22 +11,22 @@ class RoleController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Admin/Roles/Index', [
+        return Inertia::render('Roles/Index', [
             'roles' => Role::with('permissions')
                 ->orderBy('created_at', 'desc')
-                ->paginate(10)
-                ->through(fn ($role) => [
+                ->get()
+                ->map(fn ($role) => [
                     'id' => $role->id,
                     'name' => $role->name,
                     'permissions' => $role->permissions->pluck('name'),
                     'created_at' => $role->created_at->format('d M Y')
-                ]),
+                ])
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Admin/Roles/Create', [
+        return Inertia::render('Roles/Create', [
             'permissions' => Permission::all()->map->only(['id', 'name']),
         ]);
     }
@@ -47,7 +47,7 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        return Inertia::render('Admin/Roles/Edit', [
+        return Inertia::render('Roles/Edit', [
             'role' => [
                 'id' => $role->id,
                 'name' => $role->name,

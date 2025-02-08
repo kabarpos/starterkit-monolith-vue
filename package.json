@@ -22,8 +22,10 @@
         "@heroicons/vue": "^2.2.0",
         "apexcharts": "^4.4.0",
         "chart.js": "^4.4.7",
+        "path": "^0.12.7",
         "vee-validate": "^4.15.0",
         "vue-loading-overlay": "^6.0.6",
-        "vue3-apexcharts": "^1.8.0"
+        "vue3-apexcharts": "^1.8.0",
+        "ziggy-js": "^1.8.1"
     }
 }

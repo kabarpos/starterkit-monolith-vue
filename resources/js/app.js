@@ -1,8 +1,10 @@
 import "./bootstrap";
+import "../css/app.css";
+
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import VueApexCharts from "vue3-apexcharts";
+import route from "ziggy-js";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -16,11 +18,10 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) });
         app.use(plugin);
-        app.use(VueApexCharts);
-
-        // Make route function available in all components
-        app.config.globalProperties.$route = route;
-
+        
+        // Mendaftarkan route sebagai global property dan method
+        app.config.globalProperties.route = (name, params) => route(name, params, true, window.Ziggy);
+        
         return app.mount(el);
     },
     progress: {

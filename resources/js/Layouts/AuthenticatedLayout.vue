@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from "vue";
-
-const isSidebarOpen = ref(false);
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {
     ChartBarIcon,
@@ -14,6 +12,8 @@ import {
     ShieldCheckIcon,
     Bars3Icon,
 } from "@heroicons/vue/24/outline";
+
+const isSidebarOpen = ref(false);
 
 // Navigation Links
 const navigation = [
@@ -31,6 +31,21 @@ const navigation = [
     { name: "Transactions", href: "#", icon: CreditCardIcon, current: false },
 ];
 
+const admin = [
+    { 
+        name: "User Management", 
+        href: route('admin.users.index'), 
+        icon: UserGroupIcon, 
+        current: false 
+    },
+    { 
+        name: "Role Management", 
+        href: route('admin.roles.index'), 
+        icon: ShieldCheckIcon, 
+        current: false 
+    },
+];
+
 const general = [
     { name: "Settings", href: "#", icon: CogIcon, current: false },
     { name: "Security", href: "#", icon: ShieldCheckIcon, current: false },
@@ -40,6 +55,10 @@ const user = {
     name: "Fandaww Punx",
     email: "fandaww6@gmail.com",
     imageUrl: "images/user-avatar.jpg",
+};
+
+const logout = () => {
+    router.post(route('logout'));
 };
 
 defineProps({
@@ -107,6 +126,28 @@ defineProps({
                             </template>
                         </div>
                     </div>
+                    <!-- Admin Section -->
+                    <div class="mt-8">
+                        <p
+                            class="px-2 text-sm font-semibold text-gray-400 mb-4"
+                        >
+                            ADMIN AREA
+                        </p>
+                        <div class="mt-2">
+                            <template v-for="item in admin" :key="item.name">
+                                <Link
+                                    :href="item.href"
+                                    class="text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                >
+                                    <component
+                                        :is="item.icon"
+                                        class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6"
+                                    />
+                                    {{ item.name }}
+                                </Link>
+                            </template>
+                        </div>
+                    </div>
                     <!-- General Section -->
                     <div class="mt-8">
                         <p
@@ -130,6 +171,19 @@ defineProps({
                         </div>
                     </div>
                 </nav>
+
+                <!-- Logout Button -->
+                <div class="px-4 mb-2">
+                    <button
+                        @click="logout"
+                        class="w-full text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </button>
+                </div>
 
                 <!-- User Profile -->
                 <div class="border-t border-gray-700 p-4">
