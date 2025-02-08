@@ -92,115 +92,127 @@ const submit = () => {
     <GuestLayout>
         <Head title="Register" />
 
-        <div
-            class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100"
-        >
-            <div
-                class="w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
-            >
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+            <div class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <!-- Logo Section -->
                 <div class="flex justify-center mb-8">
-                    <ApplicationLogo class="w-20 h-20" />
+                    <ApplicationLogo class="w-20 h-20 transition-transform hover:scale-105" />
                 </div>
 
                 <!-- Welcome Text -->
                 <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">
-                        Create an Account
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
+                        Buat Akun Baru
                     </h2>
-                    <p class="text-gray-600 mt-1">
-                        Fill in your details to get started
-                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Daftar untuk memulai perjalanan Anda</p>
                 </div>
 
-                <form @submit.prevent="submit">
+                <form @submit.prevent="submit" class="space-y-6">
+                    <!-- Name -->
                     <div>
-                        <InputLabel for="name" value="Name" />
+                        <InputLabel for="name" value="Nama Lengkap" class="text-gray-700 dark:text-gray-300" />
                         <TextInput
                             id="name"
                             type="text"
-                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 focus:border-blue-500 focus:ring-blue-500 transition-colors"
                             v-model="form.name"
-                            placeholder="Enter your full name"
                             required
                             autofocus
                             autocomplete="name"
+                            placeholder="Masukkan nama lengkap Anda"
                         />
-                        <InputError class="mt-2" :message="form.errors.name" />
+                        <InputError :message="form.errors.name" class="mt-1" />
                     </div>
 
-                    <div class="mt-4">
-                        <InputLabel for="email" value="Email" />
+                    <!-- Email -->
+                    <div>
+                        <InputLabel for="email" value="Email" class="text-gray-700 dark:text-gray-300" />
                         <TextInput
                             id="email"
                             type="email"
-                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 focus:border-blue-500 focus:ring-blue-500 transition-colors"
                             v-model="form.email"
-                            placeholder="Enter your email address"
                             required
                             autocomplete="username"
+                            placeholder="Masukkan alamat email Anda"
                         />
-                        <InputError class="mt-2" :message="form.errors.email" />
+                        <InputError :message="form.errors.email" class="mt-1" />
                     </div>
 
-                    <div class="mt-4">
-                        <InputLabel for="phone" value="WhatsApp Number" />
+                    <!-- Phone -->
+                    <div>
+                        <InputLabel for="phone" value="Nomor WhatsApp" class="text-gray-700 dark:text-gray-300" />
                         <TextInput
                             id="phone"
                             type="text"
-                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 focus:border-blue-500 focus:ring-blue-500 transition-colors"
                             v-model="form.phone"
-                            placeholder="Enter your WhatsApp number (e.g. 081234567890)"
                             required
-                            maxlength="13"
-                            @input="validatePhone"
+                            placeholder="Contoh: 081234567890"
                         />
-                        <p class="mt-1 text-sm text-gray-500">Format: 08xx-xxxx-xxxx (10-13 digits)</p>
-                        <InputError class="mt-2" :message="form.errors.phone" />
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Format: 08xx-xxxx-xxxx (format Indonesia)</p>
+                        <InputError :message="form.errors.phone" class="mt-1" />
                     </div>
 
-                    <div class="mt-4">
-                        <InputLabel for="password" value="Password" />
+                    <!-- Password -->
+                    <div>
+                        <InputLabel for="password" value="Password" class="text-gray-700 dark:text-gray-300" />
                         <TextInput
                             id="password"
                             type="password"
-                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 focus:border-blue-500 focus:ring-blue-500 transition-colors"
                             v-model="form.password"
-                            placeholder="Enter your password"
                             required
                             autocomplete="new-password"
+                            placeholder="Minimal 8 karakter"
                         />
-                        <InputError class="mt-2" :message="form.errors.password" />
+                        <InputError :message="form.errors.password" class="mt-1" />
                     </div>
 
-                    <div class="mt-4">
-                        <InputLabel for="password_confirmation" value="Confirm Password" />
+                    <!-- Confirm Password -->
+                    <div>
+                        <InputLabel for="password_confirmation" value="Konfirmasi Password" class="text-gray-700 dark:text-gray-300" />
                         <TextInput
                             id="password_confirmation"
                             type="password"
-                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 focus:border-blue-500 focus:ring-blue-500 transition-colors"
                             v-model="form.password_confirmation"
-                            placeholder="Confirm your password"
                             required
                             autocomplete="new-password"
+                            placeholder="Ulangi password Anda"
                         />
-                        <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                        <InputError :message="form.errors.password_confirmation" class="mt-1" />
                     </div>
 
-                    <div class="flex items-center justify-end mt-4">
-                        <Link
-                            :href="route('login')"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    <div class="space-y-4">
+                        <PrimaryButton 
+                            :class="{ 'opacity-75 cursor-not-allowed': form.processing }" 
+                            :disabled="form.processing"
+                            class="w-full justify-center py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-200"
                         >
-                            Already registered?
-                        </Link>
-
-                        <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                            Register
+                            <span v-if="form.processing">Memproses...</span>
+                            <span v-else>Daftar</span>
                         </PrimaryButton>
+
+                        <div class="text-center">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Sudah punya akun?</span>
+                            <Link
+                                :href="route('login')"
+                                class="ml-1 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                            >
+                                Masuk sekarang
+                            </Link>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </GuestLayout>
 </template>
+
+<style scoped>
+.backdrop-blur-lg {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+</style>
