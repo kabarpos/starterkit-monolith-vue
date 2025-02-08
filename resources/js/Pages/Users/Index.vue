@@ -58,8 +58,10 @@
                                             <div class="flex items-center">
                                                 <div class="h-10 w-10 flex-shrink-0">
                                                     <img 
-                                                        class="h-10 w-10 rounded-full object-cover" 
-                                                        :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&color=fff`" 
+                                                        class="h-10 w-10 rounded-full object-cover"
+                                                        :src="user.avatar_url 
+                                                            ? user.avatar_url
+                                                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&color=fff`"
                                                         :alt="user.name"
                                                     >
                                                 </div>
