@@ -3,6 +3,9 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const form = useForm({
     name: "",
@@ -61,6 +64,21 @@ const validateForm = () => {
     return isValid;
 };
 
+const validatePhone = () => {
+    // Hapus karakter non-digit
+    form.phone = form.phone.replace(/\D/g, '');
+    
+    // Pastikan dimulai dengan '08'
+    if (form.phone && !form.phone.startsWith('08')) {
+        form.phone = '08';
+    }
+    
+    // Batasi panjang maksimal 13 digit
+    if (form.phone.length > 13) {
+        form.phone = form.phone.slice(0, 13);
+    }
+};
+
 const submit = () => {
     if (validateForm()) {
         form.post("/register", {
@@ -71,149 +89,118 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Register" />
+    <GuestLayout>
+        <Head title="Register" />
 
-    <div
-        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100"
-    >
         <div
-            class="w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+            class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100"
         >
-            <!-- Logo Section -->
-            <div class="flex justify-center mb-8">
-                <ApplicationLogo class="w-20 h-20" />
-            </div>
-
-            <!-- Welcome Text -->
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">
-                    Create an Account
-                </h2>
-                <p class="text-gray-600 mt-1">
-                    Fill in your details to get started
-                </p>
-            </div>
-
-            <form @submit.prevent="submit">
-                <!-- Name Input -->
-                <div class="mb-6">
-                    <label
-                        class="block text-sm font-medium text-gray-700"
-                        for="name"
-                    >
-                        Full Name
-                    </label>
-                    <TextInput
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.name"
-                        placeholder="Enter your full name"
-                        autocomplete="name"
-                    />
-                    <InputError class="mt-2" :message="form.errors.name" />
+            <div
+                class="w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+            >
+                <!-- Logo Section -->
+                <div class="flex justify-center mb-8">
+                    <ApplicationLogo class="w-20 h-20" />
                 </div>
 
-                <!-- Email Input -->
-                <div class="mb-6">
-                    <label
-                        class="block text-sm font-medium text-gray-700"
-                        for="email"
-                    >
-                        Email
-                    </label>
-                    <TextInput
-                        id="email"
-                        type="email"
-                        class="mt-1 block w-full"
-                        v-model="form.email"
-                        placeholder="Enter your email"
-                        autocomplete="username"
-                    />
-                    <InputError class="mt-2" :message="form.errors.email" />
-                </div>
-
-                <!-- Phone Input -->
-                <div class="mb-6">
-                    <label
-                        class="block text-sm font-medium text-gray-700"
-                        for="phone"
-                    >
-                        Phone (WhatsApp)
-                    </label>
-                    <TextInput
-                        id="phone"
-                        type="tel"
-                        class="mt-1 block w-full"
-                        v-model="form.phone"
-                        placeholder="Enter your WhatsApp number"
-                    />
-                    <InputError class="mt-2" :message="form.errors.phone" />
-                </div>
-
-                <!-- Password Input -->
-                <div class="mb-6">
-                    <label
-                        class="block text-sm font-medium text-gray-700"
-                        for="password"
-                    >
-                        Password
-                    </label>
-                    <TextInput
-                        id="password"
-                        type="password"
-                        class="mt-1 block w-full"
-                        v-model="form.password"
-                        placeholder="Create a password"
-                        autocomplete="new-password"
-                    />
-                    <InputError class="mt-2" :message="form.errors.password" />
-                </div>
-
-                <!-- Password Confirmation -->
-                <div class="mb-6">
-                    <label
-                        class="block text-sm font-medium text-gray-700"
-                        for="password_confirmation"
-                    >
-                        Confirm Password
-                    </label>
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        class="mt-1 block w-full"
-                        v-model="form.password_confirmation"
-                        placeholder="Confirm your password"
-                        autocomplete="new-password"
-                    />
-                    <InputError
-                        class="mt-2"
-                        :message="form.errors.password_confirmation"
-                    />
-                </div>
-
-                <!-- Submit Button -->
-                <div class="flex flex-col space-y-4">
-                    <button
-                        type="submit"
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        :disabled="form.processing"
-                    >
-                        <span v-if="form.processing">Processing...</span>
-                        <span v-else>Create Account</span>
-                    </button>
-
-                    <p class="text-center text-sm text-gray-600">
-                        Already have an account?
-                        <Link
-                            href="/login"
-                            class="font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                            Sign in
-                        </Link>
+                <!-- Welcome Text -->
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        Create an Account
+                    </h2>
+                    <p class="text-gray-600 mt-1">
+                        Fill in your details to get started
                     </p>
                 </div>
-            </form>
+
+                <form @submit.prevent="submit">
+                    <div>
+                        <InputLabel for="name" value="Name" />
+                        <TextInput
+                            id="name"
+                            type="text"
+                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            v-model="form.name"
+                            placeholder="Enter your full name"
+                            required
+                            autofocus
+                            autocomplete="name"
+                        />
+                        <InputError class="mt-2" :message="form.errors.name" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel for="email" value="Email" />
+                        <TextInput
+                            id="email"
+                            type="email"
+                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            v-model="form.email"
+                            placeholder="Enter your email address"
+                            required
+                            autocomplete="username"
+                        />
+                        <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel for="phone" value="WhatsApp Number" />
+                        <TextInput
+                            id="phone"
+                            type="text"
+                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            v-model="form.phone"
+                            placeholder="Enter your WhatsApp number (e.g. 081234567890)"
+                            required
+                            maxlength="13"
+                            @input="validatePhone"
+                        />
+                        <p class="mt-1 text-sm text-gray-500">Format: 08xx-xxxx-xxxx (10-13 digits)</p>
+                        <InputError class="mt-2" :message="form.errors.phone" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel for="password" value="Password" />
+                        <TextInput
+                            id="password"
+                            type="password"
+                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            v-model="form.password"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="new-password"
+                        />
+                        <InputError class="mt-2" :message="form.errors.password" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel for="password_confirmation" value="Confirm Password" />
+                        <TextInput
+                            id="password_confirmation"
+                            type="password"
+                            class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                            v-model="form.password_confirmation"
+                            placeholder="Confirm your password"
+                            required
+                            autocomplete="new-password"
+                        />
+                        <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                    </div>
+
+                    <div class="flex items-center justify-end mt-4">
+                        <Link
+                            :href="route('login')"
+                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                            Already registered?
+                        </Link>
+
+                        <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            Register
+                        </PrimaryButton>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    </GuestLayout>
 </template>

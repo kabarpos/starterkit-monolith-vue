@@ -34,14 +34,22 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:'.User::class,
+            'phone' => ['required', 'string', 'regex:/^08[0-9]{8,11}$/', 'min:10', 'max:13'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'phone.regex' => 'Format WhatsApp tidak valid. Gunakan format Indonesia (contoh: 081234567890)',
+            'phone.min' => 'Nomor WhatsApp minimal 10 digit',
+            'phone.max' => 'Nomor WhatsApp maksimal 13 digit',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'status' => 'pending',
+            'status_reason' => 'Menunggu persetujuan admin',
         ]);
 
         // Assign default 'user' role
@@ -52,8 +60,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('login')
+            ->with('status', 'Registrasi berhasil! Silakan tunggu persetujuan admin untuk dapat login ke sistem.');
     }
 }

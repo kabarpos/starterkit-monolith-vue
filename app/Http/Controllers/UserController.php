@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
+use App\Events\UserStatusChanged;
 
 class UserController extends Controller
 {
@@ -22,6 +23,9 @@ class UserController extends Controller
                     'email' => $user->email,
                     'phone' => $user->phone,
                     'roles' => $user->roles->pluck('name'),
+                    'status' => $user->status,
+                    'status_reason' => $user->status_reason,
+                    'approved_at' => $user->approved_at ? $user->approved_at->format('d M Y H:i') : null,
                     'created_at' => $user->created_at->format('d M Y')
                 ])
         ]);
@@ -112,5 +116,70 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('message', 'User deleted successfully');
+    }
+
+    public function approve(Request $request, User $user)
+    {
+        $oldStatus = $user->status;
+        $user->approve($request->reason);
+        
+        event(new UserStatusChanged($user, $oldStatus, 'active'));
+
+        return redirect()->route('admin.users.index')
+            ->with('message', 'User approved successfully');
+    }
+
+    public function reject(Request $request, User $user)
+    {
+        $request->validate([
+            'reason' => 'required|string|min:10'
+        ], [
+            'reason.required' => 'Alasan penolakan wajib diisi',
+            'reason.min' => 'Alasan penolakan minimal 10 karakter'
+        ]);
+
+        $oldStatus = $user->status;
+        $user->reject($request->reason);
+        
+        event(new UserStatusChanged($user, $oldStatus, 'rejected'));
+
+        return redirect()->route('admin.users.index')
+            ->with('message', 'User rejected successfully');
+    }
+
+    public function deactivate(Request $request, User $user)
+    {
+        $request->validate([
+            'reason' => 'required|string|min:10'
+        ], [
+            'reason.required' => 'Alasan penonaktifan wajib diisi',
+            'reason.min' => 'Alasan penonaktifan minimal 10 karakter'
+        ]);
+
+        $oldStatus = $user->status;
+        $user->deactivate($request->reason);
+        
+        event(new UserStatusChanged($user, $oldStatus, 'inactive'));
+
+        return redirect()->route('admin.users.index')
+            ->with('message', 'User deactivated successfully');
+    }
+
+    public function ban(Request $request, User $user)
+    {
+        $request->validate([
+            'reason' => 'required|string|min:10'
+        ], [
+            'reason.required' => 'Alasan banned wajib diisi',
+            'reason.min' => 'Alasan banned minimal 10 karakter'
+        ]);
+
+        $oldStatus = $user->status;
+        $user->ban($request->reason);
+        
+        event(new UserStatusChanged($user, $oldStatus, 'banned'));
+
+        return redirect()->route('admin.users.index')
+            ->with('message', 'User banned successfully');
     }
 }

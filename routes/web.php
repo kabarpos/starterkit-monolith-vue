@@ -15,7 +15,7 @@ Route::get('/', function () {
 require __DIR__.'/auth.php';
 
 // Protected Routes
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'user_status'])->group(function () {
     // Dashboard Routes
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard/Index');
@@ -30,6 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         // Users Management
         Route::resource('users', UserController::class);
+        Route::put('users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
+        Route::put('users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
+        Route::put('users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
+        Route::put('users/{user}/ban', [UserController::class, 'ban'])->name('users.ban');
         // Roles Management
         Route::resource('roles', RoleController::class);
     });

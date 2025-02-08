@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class LoginRequest extends FormRequest
 {
@@ -41,7 +42,33 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Cek user berdasarkan email
+        $user = User::where('email', $this->email)->first();
+
+        // Jika user ditemukan, cek statusnya
+        if ($user) {
+            if ($user->status !== 'active') {
+                RateLimiter::hit($this->throttleKey());
+                
+                $message = match($user->status) {
+                    'pending' => 'Akun Anda masih menunggu persetujuan admin. Silakan coba lagi nanti.',
+                    'rejected' => 'Akun Anda ditolak. Alasan: ' . ($user->status_reason ?: 'Tidak ada alasan yang diberikan.'),
+                    'banned' => 'Akun Anda telah dibanned. Alasan: ' . ($user->status_reason ?: 'Tidak ada alasan yang diberikan.'),
+                    'inactive' => 'Akun Anda sedang tidak aktif. Silakan hubungi admin.',
+                    default => 'Akun Anda tidak dapat mengakses sistem saat ini.'
+                };
+
+                throw ValidationException::withMessages([
+                    'email' => $message,
+                ]);
+            }
+        }
+
+        // Coba login hanya jika user active
+        if (!Auth::attempt(array_merge(
+            $this->only('email', 'password'),
+            ['status' => 'active']
+        ), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -80,6 +107,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
     }
 }
