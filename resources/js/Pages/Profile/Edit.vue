@@ -24,35 +24,53 @@ defineProps({
 
     <AuthenticatedLayout :auth="auth">
         <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-            >
-                Profile
-            </h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                    Pengaturan Profil
+                </h2>
+            </div>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
-                >
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                        class="max-w-xl"
-                    />
-                </div>
+        <div class="py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Profile Information -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <div class="p-6">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
+                                    Informasi Profil
+                                </h3>
+                                <UpdateProfileInformationForm
+                                    :must-verify-email="mustVerifyEmail"
+                                    :status="status"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
-                >
-                    <UpdatePasswordForm class="max-w-xl" />
-                </div>
+                    <!-- Side Section -->
+                    <div class="space-y-6">
+                        <!-- Password Update -->
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div class="p-6">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
+                                    Keamanan Akun
+                                </h3>
+                                <UpdatePasswordForm />
+                            </div>
+                        </div>
 
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
-                >
-                    <DeleteUserForm class="max-w-xl" />
+                        <!-- Delete Account -->
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div class="p-6">
+                                <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-6">
+                                    Hapus Akun
+                                </h3>
+                                <DeleteUserForm />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
