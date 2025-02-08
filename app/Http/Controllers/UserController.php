@@ -20,6 +20,7 @@ class UserController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'phone' => $user->phone,
                     'roles' => $user->roles->pluck('name'),
                     'created_at' => $user->created_at->format('d M Y')
                 ])
@@ -38,6 +39,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:15',
             'password' => ['required', 'confirmed'],
             'roles' => 'required|array',
         ]);
@@ -45,6 +47,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
 
@@ -61,6 +64,7 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'phone' => $user->phone,
                 'roles' => $user->roles->pluck('id'),
             ],
             'roles' => Role::all()->map->only(['id', 'name']),
@@ -69,17 +73,33 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'phone' => 'required|string|max:15',
             'roles' => 'required|array',
-        ]);
+        ];
 
-        $user->update([
+        // Tambahkan validasi password hanya jika password diisi
+        if ($request->filled('password')) {
+            $rules['password'] = ['required', 'confirmed'];
+        }
+
+        $request->validate($rules);
+
+        // Siapkan data update
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
-        ]);
+            'phone' => $request->phone,
+        ];
 
+        // Tambahkan password ke data update jika diisi
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($userData);
         $user->syncRoles($request->roles);
 
         return redirect()->route('admin.users.index')

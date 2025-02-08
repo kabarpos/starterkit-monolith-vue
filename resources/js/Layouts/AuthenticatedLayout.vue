@@ -148,28 +148,7 @@ defineProps({
                             </template>
                         </div>
                     </div>
-                    <!-- General Section -->
-                    <div class="mt-8">
-                        <p
-                            class="px-2 text-sm font-semibold text-gray-400 mb-4"
-                        >
-                            ADMIN AREA
-                        </p>
-                        <div class="mt-2">
-                            <template v-for="item in general" :key="item.name">
-                                <Link
-                                    :href="item.href"
-                                    class="text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                                >
-                                    <component
-                                        :is="item.icon"
-                                        class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6"
-                                    />
-                                    {{ item.name }}
-                                </Link>
-                            </template>
-                        </div>
-                    </div>
+    
                 </nav>
 
                 <!-- Logout Button -->
@@ -227,6 +206,9 @@ defineProps({
 
             <!-- Page content -->
             <main class="py-6 px-6">
+                <header class="mb-6">
+                    <slot name="header" />
+                </header>
                 <slot />
             </main>
         </div>

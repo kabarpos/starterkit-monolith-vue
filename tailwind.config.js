@@ -1,5 +1,8 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
+    darkMode: false,
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
@@ -8,12 +11,15 @@ export default {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+            },
             colors: {
                 primary: "#0B2447",
                 secondary: "#19376D",
-            },
-            fontFamily: {
-                sans: ["Inter", "sans-serif"],
+                'input-bg': '#ffffff',
+                'input-text': '#1f2937',
+                'input-border': '#d1d5db',
             },
         },
     },
