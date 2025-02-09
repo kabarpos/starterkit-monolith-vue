@@ -19,7 +19,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                             </svg>
-                            <span class="hidden md:inline ml-2">Tambah Pengguna</span>
+                            <span class="hidden md:inline ml-2 text-sm">Tambah Pengguna</span>
                         </span>
                     </Link>
                 </div>
@@ -29,9 +29,9 @@
         <div class="space-y-4 sm:space-y-6">
             <!-- Search and Filter Section -->
             <Card class="p-4">
-                <div class="flex flex-col gap-4">
+                <div class="flex flex-col md:flex-row gap-4">
                     <!-- Search bar -->
-                    <div class="w-full">
+                    <div class="w-full md:flex-1">
                         <TextInput
                             v-model="search"
                             type="search"
@@ -41,10 +41,10 @@
                     </div>
                     
                     <!-- Filter buttons -->
-                    <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex flex-col md:flex-row gap-3">
                         <select
                             v-model="filters.role"
-                            class="w-full sm:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                            class="w-full md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
                             <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Role</option>
                             <option 
@@ -58,7 +58,7 @@
                         </select>
                         <select
                             v-model="filters.status"
-                            class="w-full sm:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                            class="w-full md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
                             <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Status</option>
                             <option value="pending" class="bg-light-bg dark:bg-dark-bg">Pending</option>
