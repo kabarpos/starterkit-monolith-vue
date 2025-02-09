@@ -71,9 +71,11 @@ class UserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone,
-                'roles' => $user->roles->pluck('id'),
+                'roles' => $user->roles->pluck('name'),
+                'status' => $user->status,
+                'status_reason' => $user->status_reason,
             ],
-            'roles' => Role::all()->map->only(['id', 'name']),
+            'roles' => Role::all()->pluck('name'),
         ]);
     }
 
@@ -84,6 +86,13 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'phone' => 'required|string|max:15',
             'roles' => 'required|array',
+            'status' => 'required|in:pending,active,rejected,banned,inactive',
+            'status_reason' => 'required_unless:status,active|string|min:10',
+        ];
+
+        $messages = [
+            'status_reason.required_unless' => 'Alasan perubahan status wajib diisi ketika status bukan active',
+            'status_reason.min' => 'Alasan perubahan status minimal 10 karakter'
         ];
 
         // Tambahkan validasi password hanya jika password diisi
@@ -91,22 +100,36 @@ class UserController extends Controller
             $rules['password'] = ['required', 'confirmed'];
         }
 
-        $request->validate($rules);
+        $request->validate($rules, $messages);
 
         // Siapkan data update
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'status' => $request->status,
+            'status_reason' => $request->status !== 'active' ? $request->status_reason : null,
         ];
+
+        // Jika status berubah menjadi active, set approved_at dan approved_by
+        if ($request->status === 'active' && $user->status !== 'active') {
+            $userData['approved_at'] = now();
+            $userData['approved_by'] = auth()->id();
+        }
 
         // Tambahkan password ke data update jika diisi
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);
         }
 
+        $oldStatus = $user->status;
         $user->update($userData);
         $user->syncRoles($request->roles);
+
+        // Trigger event status changed
+        if ($oldStatus !== $request->status) {
+            event(new UserStatusChanged($user, $oldStatus, $request->status));
+        }
 
         return redirect()->route('admin.users.index')
             ->with('message', 'User updated successfully');

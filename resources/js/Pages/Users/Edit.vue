@@ -76,10 +76,30 @@
                         v-model="form.status"
                         class="mt-1 block w-full rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                     >
-                        <option value="active" class="text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg">Aktif</option>
-                        <option value="inactive" class="text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg">Nonaktif</option>
+                        <option 
+                            v-for="option in statusOptions" 
+                            :key="option.value"
+                            :value="option.value"
+                            class="text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg"
+                        >
+                            {{ option.label }}
+                        </option>
                     </select>
                     <InputError :message="form.errors.status" class="mt-2" />
+                </div>
+
+                <!-- Status Reason Field -->
+                <div v-if="form.status && form.status !== 'active'">
+                    <InputLabel for="status_reason" :value="getStatusReasonLabel()" />
+                    <textarea
+                        id="status_reason"
+                        v-model="form.status_reason"
+                        class="mt-1 block w-full rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                        rows="3"
+                        required
+                        :placeholder="getStatusReasonPlaceholder()"
+                    ></textarea>
+                    <InputError :message="form.errors.status_reason" class="mt-2" />
                 </div>
 
                 <div class="flex items-center justify-end gap-4">
@@ -138,19 +158,69 @@ const form = useForm({
     name: props.user.name,
     email: props.user.email,
     phone: props.user.phone,
-    roles: formattedRoles.value,
-    status: props.user.status
+    roles: formattedRoles.value.length ? formattedRoles.value : ['user'],
+    status: props.user.status || 'pending',
+    status_reason: props.user.status_reason || ''
 });
 
 const submit = () => {
+    // Validasi status sebelum submit
+    if (!form.status) {
+        form.status = 'pending';
+    }
+
+    // Validasi status_reason jika status bukan active
+    if (form.status !== 'active' && !form.status_reason) {
+        form.setError('status_reason', 'Alasan perubahan status wajib diisi');
+        return;
+    }
+    
     form.put(route('admin.users.update', props.user.id), {
-        preserveScroll: true
+        preserveScroll: true,
+        onSuccess: () => {
+            // Feedback sukses
+            console.log('User berhasil diperbarui dengan status:', form.status);
+        },
+        onError: (errors) => {
+            console.error('Error saat memperbarui user:', errors);
+        }
     });
 };
 
 // Helper untuk mendapatkan nama role
 const getRoleName = (role) => {
     return typeof role === 'object' ? role.name : role;
+};
+
+// Status options dari database enum
+const statusOptions = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'active', label: 'Aktif' },
+    { value: 'rejected', label: 'Ditolak' },
+    { value: 'banned', label: 'Diblokir' },
+    { value: 'inactive', label: 'Nonaktif' }
+];
+
+// Helper untuk label status reason
+const getStatusReasonLabel = () => {
+    const labels = {
+        'pending': 'Alasan Pending',
+        'rejected': 'Alasan Penolakan',
+        'banned': 'Alasan Pemblokiran',
+        'inactive': 'Alasan Penonaktifan'
+    };
+    return labels[form.status] || 'Alasan Perubahan Status';
+};
+
+// Helper untuk placeholder status reason
+const getStatusReasonPlaceholder = () => {
+    const placeholders = {
+        'pending': 'Masukkan alasan kenapa user masih pending...',
+        'rejected': 'Masukkan alasan kenapa user ditolak...',
+        'banned': 'Masukkan alasan kenapa user diblokir...',
+        'inactive': 'Masukkan alasan kenapa user dinonaktifkan...'
+    };
+    return placeholders[form.status] || 'Masukkan alasan perubahan status...';
 };
 </script>
 

@@ -19,7 +19,8 @@
         <div class="space-y-6">
                         <!-- Search and Filter Section -->
             <Card class="p-4">
-                <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <!-- Search bar -->
                     <div class="flex-1">
                         <TextInput
                                         v-model="search"
@@ -28,10 +29,12 @@
                             placeholder="Cari pengguna..."
                         />
                     </div>
-                    <div class="flex gap-4">
+                    
+                    <!-- Filter buttons -->
+                    <div class="flex flex-1 md:flex-none gap-3">
                         <select
                             v-model="filters.role"
-                            class="rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                            class="flex-1 md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
                             <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Role</option>
                             <option v-for="role in roles" :key="role" :value="role" class="bg-light-bg dark:bg-dark-bg">
@@ -40,10 +43,13 @@
                         </select>
                         <select
                             v-model="filters.status"
-                            class="rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                            class="flex-1 md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
                             <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Status</option>
+                            <option value="pending" class="bg-light-bg dark:bg-dark-bg">Pending</option>
                             <option value="active" class="bg-light-bg dark:bg-dark-bg">Aktif</option>
+                            <option value="rejected" class="bg-light-bg dark:bg-dark-bg">Ditolak</option>
+                            <option value="banned" class="bg-light-bg dark:bg-dark-bg">Diblokir</option>
                             <option value="inactive" class="bg-light-bg dark:bg-dark-bg">Nonaktif</option>
                         </select>
                                     </div>
@@ -54,47 +60,53 @@
             <Card>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-[var(--border-primary)]">
+                        <!-- Responsive table headers -->
                         <thead class="bg-[var(--bg-secondary)]">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
                                     Pengguna
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
                                     Role
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
                                     Status
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
                                     Bergabung
                                 </th>
-                                <th scope="col" class="relative px-6 py-3">
+                                <th scope="col" class="relative px-4 sm:px-6 py-3">
                                     <span class="sr-only">Actions</span>
                                 </th>
                                     </tr>
                                 </thead>
+
+                        <!-- Responsive table body -->
                         <tbody class="bg-[var(--bg-secondary)] divide-y divide-[var(--border-primary)]">
                             <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-[var(--bg-secondary)]/50">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <!-- User info - simplified for mobile -->
+                                <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="h-10 w-10 flex-shrink-0">
+                                        <div class="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
                                                     <img 
                                                 :src="user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&color=fff`"
-                                                :alt="user.name"
-                                                        class="h-10 w-10 rounded-full object-cover"
+                                                        :alt="user.name"
+                                                class="h-full w-full rounded-full object-cover"
                                             />
                                                 </div>
-                                                <div class="ml-4">
+                                        <div class="ml-3 sm:ml-4">
                                             <div class="text-sm font-medium text-[var(--text-primary)]">
                                                 {{ user.name }}
                                             </div>
-                                            <div class="text-sm text-[var(--text-secondary)]">
+                                            <div class="text-xs sm:text-sm text-[var(--text-secondary)]">
                                                 {{ user.email }}
                                             </div>
                                                 </div>
                                             </div>
                                         </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+
+                                <!-- Role - hidden on mobile -->
+                                <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                                     <div class="flex flex-wrap gap-2">
                                         <Badge 
                                                     v-for="role in user.roles" 
@@ -105,27 +117,33 @@
                                         </Badge>
                                             </div>
                                         </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+
+                                <!-- Status -->
+                                <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                     <Badge 
-                                        :variant="user.status === 'active' ? 'success' : 'warning'"
+                                        :variant="getStatusVariant(user.status)"
                                     >
-                                        {{ user.status === 'active' ? 'Aktif' : 'Nonaktif' }}
+                                        {{ getStatusLabel(user.status) }}
                                     </Badge>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">
+
+                                <!-- Join date - hidden on mobile -->
+                                <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">
                                     {{ formatDate(user.created_at) }}
                                         </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex justify-end gap-3">
+
+                                <!-- Actions -->
+                                <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end gap-2 sm:gap-3">
                                                 <Link 
                                                     :href="route('admin.users.edit', user.id)"
-                                            class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200"
                                                 >
                                                     Edit
                                                 </Link>
                                                 <button 
                                             @click="confirmUserDeletion(user)"
-                                            class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200"
                                                 >
                                                     Hapus
                                                 </button>
@@ -265,6 +283,29 @@ const formatDate = (date) => {
         month: 'long',
         day: 'numeric'
     });
+};
+
+// Tambahkan fungsi helper untuk status
+const getStatusVariant = (status) => {
+    const variants = {
+        'pending': 'warning',
+        'active': 'success',
+        'rejected': 'danger',
+        'banned': 'danger',
+        'inactive': 'warning'
+    };
+    return variants[status] || 'warning';
+};
+
+const getStatusLabel = (status) => {
+    const labels = {
+        'pending': 'Pending',
+        'active': 'Aktif',
+        'rejected': 'Ditolak',
+        'banned': 'Diblokir',
+        'inactive': 'Nonaktif'
+    };
+    return labels[status] || status;
 };
 </script>
 

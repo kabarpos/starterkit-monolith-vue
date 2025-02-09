@@ -30,28 +30,28 @@ class UserStatus
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
                 return redirect()->route('login')
-                    ->with('error', 'Akun Anda masih dalam proses review. Silakan tunggu persetujuan dari admin.');
+                    ->with('error', 'Akun Anda masih dalam proses review. ' . ($user->status_reason ? "Alasan: {$user->status_reason}" : 'Silakan tunggu persetujuan dari admin.'));
             
             case 'rejected':
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
                 return redirect()->route('login')
-                    ->with('error', 'Akun Anda ditolak dengan alasan: ' . $user->status_reason);
+                    ->with('error', 'Akun Anda ditolak. ' . ($user->status_reason ? "Alasan: {$user->status_reason}" : ''));
             
             case 'banned':
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
                 return redirect()->route('login')
-                    ->with('error', 'Akun Anda telah dibanned dengan alasan: ' . $user->status_reason);
+                    ->with('error', 'Akun Anda telah dibanned. ' . ($user->status_reason ? "Alasan: {$user->status_reason}" : ''));
             
             case 'inactive':
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
                 return redirect()->route('login')
-                    ->with('error', 'Akun Anda sedang dinonaktifkan dengan alasan: ' . $user->status_reason);
+                    ->with('error', 'Akun Anda sedang dinonaktifkan. ' . ($user->status_reason ? "Alasan: {$user->status_reason}" : ''));
             
             case 'active':
                 return $next($request);

@@ -15,6 +15,9 @@ const props = defineProps({
     status: {
         type: String,
     },
+    error: {
+        type: String,
+    },
 });
 
 const form = useForm({
@@ -37,19 +40,16 @@ const validateForm = () => {
 
     // Email validation
     if (!form.email) {
-        form.setError("email", "Email is required");
+        form.setError("email", "Email wajib diisi");
         isValid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        form.setError("email", "Invalid email format");
+        form.setError("email", "Format email tidak valid");
         isValid = false;
     }
 
     // Password validation
     if (!form.password) {
-        form.setError("password", "Password is required");
-        isValid = false;
-    } else if (form.password.length < 8) {
-        form.setError("password", "Password must be at least 8 characters");
+        form.setError("password", "Password wajib diisi");
         isValid = false;
     }
 
@@ -82,7 +82,7 @@ const validateForm = () => {
                 </div>
 
                 <!-- Error Messages -->
-                <div v-if="form.errors.email" class="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800">
+                <div v-if="error || form.errors.email" class="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800">
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
                             <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -91,7 +91,7 @@ const validateForm = () => {
                         </div>
                         <div class="ml-3">
                             <h3 class="text-sm font-medium text-red-800 dark:text-red-300">Login Gagal</h3>
-                            <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ form.errors.email }}</p>
+                            <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ error || form.errors.email }}</p>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,6 @@ const validateForm = () => {
                             autocomplete="username"
                             placeholder="Masukkan alamat email Anda"
                         />
-                        <InputError :message="form.errors.email" class="mt-1" />
                     </div>
 
                     <div>
@@ -123,7 +122,6 @@ const validateForm = () => {
                             autocomplete="current-password"
                             placeholder="Masukkan password Anda"
                         />
-                        <InputError :message="form.errors.password" class="mt-1" />
                     </div>
 
                     <div class="flex items-center justify-between">

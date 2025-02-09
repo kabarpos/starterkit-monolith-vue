@@ -18,7 +18,7 @@ defineProps({
 <template>
     <div 
         :class="[
-            'theme-transition backdrop-blur-xl border shadow-lg',
+            'theme-transition backdrop-blur-xl border shadow-lg rounded-lg',
             // Base styles
             'bg-light-card dark:bg-dark-card',
             'border-light-border dark:border-dark-border',
