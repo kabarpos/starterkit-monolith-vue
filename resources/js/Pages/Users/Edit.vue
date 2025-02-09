@@ -4,7 +4,7 @@
     <AuthenticatedLayout :auth="auth" title="Edit Pengguna">
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-bold text-[var(--text-primary)]">
+                <h2 class="text-lg md:text-xl font-semibold text-[var(--text-primary)] truncate">
                     Edit Pengguna
                 </h2>
             </div>

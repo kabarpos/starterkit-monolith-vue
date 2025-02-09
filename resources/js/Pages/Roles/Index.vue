@@ -10,15 +10,17 @@
                         Manajemen Role
                     </h2>
                     
-                    <!-- Tombol + yang lebih simpel -->
+                    <!-- Tombol responsif -->
                     <Link
                         :href="route('admin.roles.create')"
-                        class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-colors duration-200"
+                        class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-colors duration-200"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="sr-only">Tambah Role</span>
+                        <span class="flex items-center px-3 py-2 md:px-4 md:py-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="hidden md:inline ml-2">Tambah Role</span>
+                        </span>
                     </Link>
                 </div>
             </div>
