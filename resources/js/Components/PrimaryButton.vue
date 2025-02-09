@@ -1,6 +1,34 @@
+<script setup>
+defineProps({
+    type: {
+        type: String,
+        default: 'submit',
+    },
+    variant: {
+        type: String,
+        default: 'primary', // 'primary', 'secondary', 'danger'
+    },
+    size: {
+        type: String,
+        default: 'md', // 'sm', 'md', 'lg'
+    },
+});
+</script>
+
 <template>
     <button
-        class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-800 dark:active:bg-gray-300"
+        :type="type"
+        :class="[
+            'inline-flex items-center justify-center font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-75 disabled:cursor-not-allowed shadow-sm hover:shadow-md',
+            // Variants
+            variant === 'primary' && 'bg-gradient-to-r from-[var(--primary-600)] to-[var(--accent-600)] hover:from-[var(--primary-700)] hover:to-[var(--accent-700)] text-white focus:ring-[var(--primary-500)] dark:focus:ring-offset-[var(--neutral-800)]',
+            variant === 'secondary' && 'bg-[var(--card-gradient)] border border-[var(--border-primary)] text-[var(--text-primary)] hover:border-[var(--primary-400)] focus:ring-[var(--neutral-500)]',
+            variant === 'danger' && 'bg-gradient-to-r from-[var(--error-600)] to-[var(--error-500)] hover:from-[var(--error-700)] hover:to-[var(--error-600)] text-white focus:ring-[var(--error-500)]',
+            // Sizes
+            size === 'sm' && 'px-3 py-1.5 text-sm rounded-lg',
+            size === 'md' && 'px-4 py-2 text-sm rounded-lg',
+            size === 'lg' && 'px-6 py-3 text-base rounded-xl',
+        ]"
     >
         <slot />
     </button>

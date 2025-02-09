@@ -1,10 +1,22 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-const model = defineModel({
-    type: String,
-    required: true,
+defineProps({
+    modelValue: {
+        type: [String, Number],
+        required: true,
+    },
+    type: {
+        type: String,
+        default: 'text',
+    },
+    size: {
+        type: String,
+        default: 'md', // 'sm', 'md', 'lg'
+    },
 });
+
+defineEmits(['update:modelValue']);
 
 const input = ref(null);
 
@@ -19,8 +31,21 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <input
-        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600"
-        v-model="model"
         ref="input"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+        :type="type"
+        :class="[
+            'w-full transition-colors duration-200',
+            'border-neutral-300 dark:border-neutral-700',
+            'bg-white dark:bg-neutral-800/50',
+            'text-neutral-900 dark:text-neutral-100',
+            'placeholder-neutral-400 dark:placeholder-neutral-500',
+            'focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-500 dark:focus:ring-primary-500',
+            // Sizes
+            size === 'sm' && 'px-2.5 py-1.5 text-sm rounded-lg',
+            size === 'md' && 'px-3 py-2 text-base rounded-lg',
+            size === 'lg' && 'px-4 py-2.5 text-lg rounded-xl',
+        ]"
     />
 </template>

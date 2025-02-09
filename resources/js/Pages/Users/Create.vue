@@ -1,145 +1,146 @@
 <template>
+    <Head title="Create User" />
+
     <AuthenticatedLayout :auth="auth">
         <template #header>
-            <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-2xl text-gray-800 leading-tight">Tambah User Baru</h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-[var(--text-primary)]">
+                    Tambah Pengguna Baru
+                </h2>
             </div>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-8">
-                        <form @submit.prevent="submit" class="space-y-6">
-                            <!-- Name -->
-                            <div>
-                                <InputLabel for="name" value="Nama Lengkap" class="text-gray-700 text-sm font-bold" />
-                                <TextInput
-                                    id="name"
-                                    type="text"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
-                                    v-model="form.name"
-                                    placeholder="Masukkan nama lengkap"
-                                    required
-                                    autofocus
-                                />
-                                <InputError class="mt-2" :message="form.errors.name" />
-                            </div>
-
-                            <!-- Email -->
-                            <div>
-                                <InputLabel for="email" value="Alamat Email" class="text-gray-700 text-sm font-bold" />
-                                <TextInput
-                                    id="email"
-                                    type="email"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
-                                    v-model="form.email"
-                                    placeholder="Masukkan alamat email"
-                                    required
-                                />
-                                <InputError class="mt-2" :message="form.errors.email" />
-                            </div>
-
-                            <!-- WhatsApp -->
-                            <div>
-                                <InputLabel for="phone" value="Nomor WhatsApp" class="text-gray-700 text-sm font-bold" />
-                                <TextInput
-                                    id="phone"
-                                    type="text"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
-                                    v-model="form.phone"
-                                    placeholder="Contoh: 081234567890"
-                                    required
-                                />
-                                <p class="mt-1 text-sm text-gray-500">Format: 08xx-xxxx-xxxx (format Indonesia)</p>
-                                <InputError class="mt-2" :message="form.errors.phone" />
-                            </div>
-
-                            <!-- Password -->
-                            <div>
-                                <InputLabel for="password" value="Password" class="text-gray-700 text-sm font-bold" />
-                                <TextInput
-                                    id="password"
-                                    type="password"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
-                                    v-model="form.password"
-                                    placeholder="Masukkan password"
-                                    required
-                                />
-                                <InputError class="mt-2" :message="form.errors.password" />
-                            </div>
-
-                            <!-- Confirm Password -->
-                            <div>
-                                <InputLabel for="password_confirmation" value="Konfirmasi Password" class="text-gray-700 text-sm font-bold" />
-                                <TextInput
-                                    id="password_confirmation"
-                                    type="password"
-                                    class="mt-1 block w-full bg-input-bg text-input-text border-input-border focus:border-[#19376D] focus:ring-[#19376D] rounded-md shadow-sm"
-                                    v-model="form.password_confirmation"
-                                    placeholder="Konfirmasi password"
-                                    required
-                                />
-                            </div>
-
-                            <!-- Roles -->
-                            <div>
-                                <InputLabel value="Role User" class="text-gray-700 text-sm font-bold mb-3" />
-                                <div class="mt-2 space-y-3 bg-gray-50 p-4 rounded-lg">
-                                    <div v-for="role in roles" :key="role.id" class="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            :id="'role_' + role.id"
-                                            v-model="form.roles"
-                                            :value="role.id"
-                                            class="w-4 h-4 text-[#0B2447] border-gray-300 rounded focus:ring-[#19376D]"
-                                        />
-                                        <label :for="'role_' + role.id" class="ml-3 text-sm font-medium text-gray-700">
-                                            {{ role.name }}
-                                        </label>
-                                    </div>
-                                </div>
-                                <InputError class="mt-2" :message="form.errors.roles" />
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="flex items-center justify-end gap-4 pt-4 border-t">
-                                <Link
-                                    :href="route('admin.users.index')"
-                                    class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#19376D] focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
-                                >
-                                    Batal
-                                </Link>
-                                <PrimaryButton 
-                                    :class="{ 'opacity-25': form.processing }" 
-                                    :disabled="form.processing"
-                                    class="bg-[#0B2447] hover:bg-[#19376D] focus:bg-[#19376D]"
-                                >
-                                    Simpan User
-                                </PrimaryButton>
-                            </div>
-                        </form>
-                    </div>
+        <Card class="max-w-2xl mx-auto">
+            <form @submit.prevent="submit" class="space-y-6">
+                <div>
+                    <InputLabel for="name" value="Nama Lengkap" />
+                    <TextInput
+                        id="name"
+                        v-model="form.name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        required
+                        autofocus
+                    />
+                    <InputError :message="form.errors.name" class="mt-2" />
                 </div>
-            </div>
-        </div>
+
+                <div>
+                    <InputLabel for="email" value="Email" />
+                    <TextInput
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        class="mt-1 block w-full"
+                        required
+                    />
+                    <InputError :message="form.errors.email" class="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel for="phone" value="Nomor WhatsApp" />
+                    <TextInput
+                        id="phone"
+                        v-model="form.phone"
+                        type="text"
+                        class="mt-1 block w-full"
+                        required
+                    />
+                    <InputError :message="form.errors.phone" class="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel for="password" value="Password" />
+                    <TextInput
+                        id="password"
+                        v-model="form.password"
+                        type="password"
+                        class="mt-1 block w-full"
+                        required
+                    />
+                    <InputError :message="form.errors.password" class="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel for="password_confirmation" value="Konfirmasi Password" />
+                    <TextInput
+                        id="password_confirmation"
+                        v-model="form.password_confirmation"
+                        type="password"
+                        class="mt-1 block w-full"
+                        required
+                    />
+                    <InputError :message="form.errors.password_confirmation" class="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel for="roles" value="Role" />
+                    <div class="mt-2 space-y-2">
+                        <label v-for="role in roles" :key="role" class="inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                :value="role"
+                                v-model="form.roles"
+                                class="rounded border-[var(--border-primary)] text-[var(--primary-600)] focus:ring-[var(--primary-500)]"
+                            />
+                            <span class="ml-2 text-[var(--text-primary)]">{{ role }}</span>
+                        </label>
+                    </div>
+                    <InputError :message="form.errors.roles" class="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel for="status" value="Status" />
+                    <select
+                        id="status"
+                        v-model="form.status"
+                        class="mt-1 block w-full rounded-lg border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)]"
+                        required
+                    >
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Nonaktif</option>
+                    </select>
+                    <InputError :message="form.errors.status" class="mt-2" />
+                </div>
+
+                <div class="flex items-center justify-end gap-4">
+                    <Link
+                        :href="route('admin.users.index')"
+                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                    >
+                        Batal
+                    </Link>
+                    <button
+                        type="submit"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                        :disabled="form.processing"
+                    >
+                        <span v-if="form.processing">Memproses...</span>
+                        <span v-else>Simpan</span>
+                    </button>
+                </div>
+            </form>
+        </Card>
     </AuthenticatedLayout>
 </template>
 
 <script setup>
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import InputError from '@/Components/InputError.vue';
+import Card from '@/Components/Card.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import InputError from '@/Components/InputError.vue';
 
 const props = defineProps({
     auth: {
         type: Object,
         required: true
     },
-    roles: Array
+    roles: {
+        type: Array,
+        required: true
+    }
 });
 
 const form = useForm({
@@ -148,10 +149,13 @@ const form = useForm({
     phone: '',
     password: '',
     password_confirmation: '',
-    roles: []
+    roles: [],
+    status: 'active'
 });
 
 const submit = () => {
-    form.post(route('admin.users.store'));
+    form.post(route('admin.users.store'), {
+        preserveScroll: true
+    });
 };
 </script> 

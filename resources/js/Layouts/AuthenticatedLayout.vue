@@ -5,31 +5,22 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {
     ChartBarIcon,
     UserGroupIcon,
-    CubeIcon,
-    ChatBubbleLeftIcon,
-    CreditCardIcon,
-    CogIcon,
     ShieldCheckIcon,
-    Bars3Icon,
 } from "@heroicons/vue/24/outline";
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import DarkModeToggle from '@/Components/DarkModeToggle.vue';
+import { Head } from "@inertiajs/vue3";
 
 const isSidebarOpen = ref(false);
 const isProfileMenuOpen = ref(false);
+const showingNavigationDropdown = ref(false);
 
 // Navigation Links
 const navigation = [
     { name: "Overview", href: "/dashboard", icon: ChartBarIcon, current: true },
-    { name: "Statistics", href: "#", icon: ChartBarIcon, current: false },
-    { name: "Customers", href: "#", icon: UserGroupIcon, current: false },
-    { name: "Product", href: "#", icon: CubeIcon, current: false },
-    {
-        name: "Messages",
-        href: "#",
-        icon: ChatBubbleLeftIcon,
-        count: 13,
-        current: false,
-    },
-    { name: "Transactions", href: "#", icon: CreditCardIcon, current: false },
 ];
 
 const admin = [
@@ -47,14 +38,13 @@ const admin = [
     },
 ];
 
-const general = [
-    { name: "Settings", href: "#", icon: CogIcon, current: false },
-    { name: "Security", href: "#", icon: ShieldCheckIcon, current: false },
-];
-
 const props = defineProps({
     auth: {
         type: Object,
+        required: true
+    },
+    title: {
+        type: String,
         required: true
     }
 });
@@ -91,27 +81,27 @@ const userData = computed(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100">
+    <Head :title="title" />
+
+    <div class="min-h-screen bg-[var(--bg-gradient)] animated-gradient">
         <!-- Sidebar -->
         <div
-            class="fixed inset-y-0 w-64 flex-col bg-[#0B2447]"
+            class="fixed inset-y-0 w-64 flex-col bg-[var(--card-gradient)] backdrop-blur-xl border-r border-[var(--border-primary)] shadow-lg transition-all duration-300"
             :class="{ 'hidden md:flex': !isSidebarOpen, flex: isSidebarOpen }"
         >
             <!-- Sidebar header -->
-            <div class="flex h-16 shrink-0 items-center px-6">
-                <ApplicationLogo class="h-8 w-auto text-white" />
-                <span class="ml-2 text-xl font-semibold text-white"
-                    >Siohioma</span
-                >
+            <div class="flex h-16 shrink-0 items-center px-6 border-b border-[var(--border-primary)]">
+                <ApplicationLogo class="h-8 w-auto transition-transform hover:scale-105" />
+                <span class="ml-2 text-xl font-semibold text-[var(--text-primary)]">Siohioma</span>
             </div>
-            <hr class="border-gray-600" />
+
             <!-- Sidebar content -->
             <div class="flex flex-1 flex-col overflow-y-auto custom-scrollbar">
                 <nav class="flex-1 px-4 py-4">
                     <!-- Dashboard Section -->
                     <div class="space-y-8">
                         <div>
-                            <p class="px-2 text-sm font-semibold text-gray-400 mb-4">
+                            <p class="px-2 text-sm font-semibold text-[var(--text-secondary)] mb-4">
                                 DASHBOARD
                             </p>
                             <div class="space-y-1">
@@ -120,24 +110,24 @@ const userData = computed(() => {
                                         :href="item.href"
                                         :class="[
                                             item.current
-                                                ? 'bg-[#19376D] text-white'
-                                                : 'text-gray-300 hover:bg-[#19376D] hover:text-white',
-                                            'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+                                                ? 'bg-[var(--primary-50)] dark:bg-[var(--primary-900)]/20 text-[var(--primary-600)] dark:text-[var(--primary-400)]'
+                                                : 'text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50',
+                                            'group flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors duration-150',
                                         ]"
                                     >
                                         <component
                                             :is="item.icon"
                                             :class="[
                                                 item.current
-                                                    ? 'text-white'
-                                                    : 'text-gray-400 group-hover:text-white',
-                                                'mr-3 flex-shrink-0 h-6 w-6',
+                                                    ? 'text-[var(--primary-600)] dark:text-[var(--primary-400)]'
+                                                    : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]',
+                                                'mr-3 flex-shrink-0 h-6 w-6 transition-colors duration-150',
                                             ]"
                                         />
                                         {{ item.name }}
                                         <span
                                             v-if="item.count"
-                                            class="ml-auto inline-block py-0.5 px-2 text-xs rounded-full bg-green-500 text-white"
+                                            class="ml-auto inline-block py-0.5 px-2 text-xs rounded-full bg-[var(--primary-100)] dark:bg-[var(--primary-900)]/30 text-[var(--primary-600)] dark:text-[var(--primary-400)]"
                                         >
                                             {{ item.count }}
                                         </span>
@@ -148,18 +138,18 @@ const userData = computed(() => {
 
                         <!-- Admin Section -->
                         <div v-if="isAdmin">
-                            <p class="px-2 text-sm font-semibold text-gray-400 mb-4">
+                            <p class="px-2 text-sm font-semibold text-[var(--text-secondary)] mb-4">
                                 ADMIN AREA
                             </p>
                             <div class="space-y-1">
                                 <template v-for="item in admin" :key="item.name">
                                     <Link
                                         :href="item.href"
-                                        class="text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                        class="text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50 group flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors duration-150"
                                     >
                                         <component
                                             :is="item.icon"
-                                            class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6"
+                                            class="text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] mr-3 flex-shrink-0 h-6 w-6 transition-colors duration-150"
                                         />
                                         {{ item.name }}
                                     </Link>
@@ -171,24 +161,11 @@ const userData = computed(() => {
 
                 <!-- Bottom Section -->
                 <div class="mt-auto">
-                    <!-- Logout Button -->
-                    <div class="px-4 mb-2">
-                        <button
-                            @click="logout"
-                            class="w-full text-gray-300 hover:bg-[#19376D] hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-400 group-hover:text-white mr-3 flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                            Logout
-                        </button>
-                    </div>
-
                     <!-- User Profile -->
-                    <div v-if="userData" class="border-t border-gray-700 p-4">
+                    <div v-if="userData" class="border-t border-[var(--border-primary)] p-4">
                         <div class="flex items-center">
                             <img
-                                class="h-8 w-8 rounded-full object-cover"
+                                class="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--bg-secondary)] dark:ring-[var(--neutral-700)]"
                                 :src="userData.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random&color=fff`"
                                 :alt="userData.name"
                             />
@@ -199,15 +176,15 @@ const userData = computed(() => {
                                         @click="isProfileMenuOpen = !isProfileMenuOpen"
                                     >
                                         <div>
-                                            <p class="text-sm font-medium text-white">
+                                            <p class="text-sm font-medium text-[var(--text-primary)]">
                                                 {{ userData.name }}
                                             </p>
-                                            <p class="text-xs text-gray-400">
+                                            <p class="text-xs text-[var(--text-secondary)]">
                                                 {{ userData.email }}
                                             </p>
                                         </div>
                                         <svg 
-                                            class="h-5 w-5 text-gray-400" 
+                                            class="h-5 w-5 text-[var(--text-secondary)] transition-transform duration-200" 
                                             :class="{ 'rotate-180': isProfileMenuOpen }"
                                             xmlns="http://www.w3.org/2000/svg" 
                                             viewBox="0 0 20 20" 
@@ -220,11 +197,11 @@ const userData = computed(() => {
                                     <!-- Profile Dropdown Menu -->
                                     <div 
                                         v-show="isProfileMenuOpen"
-                                        class="absolute bottom-full left-0 right-0 mb-2 bg-[#19376D] rounded-md shadow-lg py-1 z-50 transform origin-bottom-left"
+                                        class="absolute bottom-full left-0 right-0 mb-2 bg-[var(--card-gradient)] rounded-lg shadow-lg py-1 border border-[var(--border-primary)]"
                                     >
                                         <Link
                                             :href="route('profile.edit')"
-                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-[#0B2447] hover:text-white transition-colors duration-150"
+                                            class="block px-4 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50 transition-colors duration-150"
                                         >
                                             <div class="flex items-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -235,7 +212,7 @@ const userData = computed(() => {
                                         </Link>
                                         <button
                                             @click="logout"
-                                            class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-[#0B2447] hover:text-white transition-colors duration-150"
+                                            class="block w-full text-left px-4 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50 transition-colors duration-150"
                                         >
                                             <div class="flex items-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -254,39 +231,47 @@ const userData = computed(() => {
         </div>
 
         <!-- Main content -->
-        <div class="md:pl-64">
+        <div class="md:pl-64 min-h-screen">
             <!-- Top header -->
-            <div class="sticky top-0 z-10 bg-white shadow md:hidden">
+            <div class="sticky top-0 z-10 bg-[var(--card-gradient)] backdrop-blur-xl border-b border-[var(--border-primary)] shadow-sm transition-all duration-300 md:hidden">
                 <div class="flex h-16 items-center justify-between px-6">
-                    <div class="flex items-center justify-between w-full">
-                        <button
-                            @click="isSidebarOpen = !isSidebarOpen"
-                            class="rounded-md p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                        >
-                            <span class="sr-only">Open sidebar</span>
-                            <Bars3Icon class="h-6 w-6" aria-hidden="true" />
-                        </button>
-                        <ApplicationLogo class="h-8 w-auto text-white" />
-                        <span class="sr-only">Siohioma</span>
-                    </div>
+                    <button
+                        @click="isSidebarOpen = !isSidebarOpen"
+                        class="rounded-lg p-2 text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]/50 focus:outline-none"
+                    >
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <ApplicationLogo class="h-8 w-auto" />
                 </div>
             </div>
 
             <!-- Page content -->
             <main class="py-6 px-6">
-                <header class="mb-6">
+                <header v-if="$slots.header" class="mb-6">
                     <slot name="header" />
                 </header>
-                <slot />
+                <div class="transition-all duration-300">
+                    <slot />
+                </div>
             </main>
         </div>
+
+        <!-- Dark Mode Toggle -->
+        <DarkModeToggle />
     </div>
 </template>
 
 <style scoped>
 .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    scrollbar-color: rgba(203, 213, 225, 0.2) transparent;
+}
+
+.dark .custom-scrollbar {
+    scrollbar-color: rgba(51, 65, 85, 0.2) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -298,11 +283,37 @@ const userData = computed(() => {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(203, 213, 225, 0.2);
     border-radius: 2px;
 }
 
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(51, 65, 85, 0.2);
+}
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(203, 213, 225, 0.3);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(51, 65, 85, 0.3);
+}
+
+/* Tambahkan animasi gradient */
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.bg-\[var\(--bg-gradient\)\] {
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 </style>
