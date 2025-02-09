@@ -8,38 +8,45 @@ defineProps({
         type: Boolean,
         default: false,
     },
+    as: {
+        type: String,
+        default: 'div',
+    },
 });
 </script>
 
 <template>
     <div 
         :class="[
-            'bg-[var(--card-gradient)] backdrop-blur-lg rounded-xl shadow-sm transition-all duration-300',
-            'border',
+            'theme-transition backdrop-blur-xl border shadow-lg',
+            // Base styles
+            'bg-light-card dark:bg-dark-card',
+            'border-light-border dark:border-dark-border',
+            'text-light-text dark:text-dark-text',
             // Variants
             variant === 'default' && [
-                'border-[var(--border-primary)]',
-                hover && 'hover:border-[var(--primary-400)] hover:shadow-md hover:scale-[1.02]'
+                'border-light-border dark:border-dark-border',
+                hover && 'hover:border-primary-400 dark:hover:border-primary-400 hover:shadow-md hover:scale-[1.02]'
             ],
             variant === 'primary' && [
-                'bg-gradient-to-br from-[var(--primary-600)] to-[var(--accent-600)] text-white',
+                'gradient-primary text-white',
                 'border-transparent',
-                hover && 'hover:shadow-lg hover:scale-[1.02]'
+                hover && 'hover:shadow-lg hover:scale-[1.02] gradient-primary-hover'
             ],
             variant === 'success' && [
-                'bg-gradient-to-br from-[var(--success-500)] to-[var(--success-600)] text-white',
+                'bg-gradient-to-br from-success-500 to-success-600 text-white',
                 'border-transparent',
-                hover && 'hover:shadow-lg hover:scale-[1.02]'
+                hover && 'hover:shadow-lg hover:scale-[1.02] hover:from-success-600 hover:to-success-700'
             ],
             variant === 'warning' && [
-                'bg-gradient-to-br from-[var(--warning-500)] to-[var(--warning-600)] text-white',
+                'bg-gradient-to-br from-warning-500 to-warning-600 text-white',
                 'border-transparent',
-                hover && 'hover:shadow-lg hover:scale-[1.02]'
+                hover && 'hover:shadow-lg hover:scale-[1.02] hover:from-warning-600 hover:to-warning-700'
             ],
             variant === 'danger' && [
-                'bg-gradient-to-br from-[var(--error-500)] to-[var(--error-600)] text-white',
+                'bg-gradient-to-br from-error-500 to-error-600 text-white',
                 'border-transparent',
-                hover && 'hover:shadow-lg hover:scale-[1.02]'
+                hover && 'hover:shadow-lg hover:scale-[1.02] hover:from-error-600 hover:to-error-700'
             ],
             // Hover Effect
             hover && 'cursor-pointer'
@@ -49,4 +56,15 @@ defineProps({
             <slot />
         </div>
     </div>
-</template> 
+</template>
+
+<style scoped>
+.backdrop-blur-xl {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.theme-transition {
+    transition: all 0.3s ease;
+}
+</style> 

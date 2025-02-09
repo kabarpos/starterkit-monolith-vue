@@ -36,10 +36,10 @@ defineExpose({ focus: () => input.value.focus() });
         @input="$emit('update:modelValue', $event.target.value)"
         :type="type"
         :class="[
-            'w-full transition-colors duration-200',
-            'border-neutral-300 dark:border-neutral-700',
-            'bg-white dark:bg-neutral-800/50',
-            'text-neutral-900 dark:text-neutral-100',
+            'w-full theme-transition',
+            'border-light-border dark:border-dark-border',
+            'bg-light-bg dark:bg-dark-bg',
+            'text-light-text dark:text-dark-text',
             'placeholder-neutral-400 dark:placeholder-neutral-500',
             'focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-500 dark:focus:ring-primary-500',
             // Sizes
@@ -49,3 +49,9 @@ defineExpose({ focus: () => input.value.focus() });
         ]"
     />
 </template>
+
+<style scoped>
+.theme-transition {
+    transition: all 0.3s ease;
+}
+</style>

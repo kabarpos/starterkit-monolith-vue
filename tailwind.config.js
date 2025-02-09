@@ -14,6 +14,19 @@ export default {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                // Light mode colors
+                'light-bg': '#ffffff',
+                'light-card': '#f8fafc',
+                'light-text': '#0f172a',
+                'light-border': '#e2e8f0',
+                
+                // Dark mode colors
+                'dark-bg': '#0f1729',
+                'dark-card': '#1e293b',
+                'dark-text': '#f8fafc',
+                'dark-border': '#334155',
+            },
         },
     },
     plugins: [require("@tailwindcss/forms")],

@@ -17,12 +17,12 @@
         </template>
 
         <div class="space-y-6">
-            <!-- Search and Filter Section -->
+                        <!-- Search and Filter Section -->
             <Card class="p-4">
                 <div class="flex flex-col sm:flex-row gap-4">
                     <div class="flex-1">
                         <TextInput
-                            v-model="search"
+                                        v-model="search"
                             type="search"
                             class="w-full"
                             placeholder="Cari pengguna..."
@@ -31,26 +31,26 @@
                     <div class="flex gap-4">
                         <select
                             v-model="filters.role"
-                            class="rounded-lg border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)]"
+                            class="rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
-                            <option value="">Semua Role</option>
-                            <option v-for="role in roles" :key="role" :value="role">
+                            <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Role</option>
+                            <option v-for="role in roles" :key="role" :value="role" class="bg-light-bg dark:bg-dark-bg">
                                 {{ role }}
                             </option>
                         </select>
                         <select
                             v-model="filters.status"
-                            class="rounded-lg border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)]"
+                            class="rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
-                            <option value="">Semua Status</option>
-                            <option value="active">Aktif</option>
-                            <option value="inactive">Nonaktif</option>
+                            <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Status</option>
+                            <option value="active" class="bg-light-bg dark:bg-dark-bg">Aktif</option>
+                            <option value="inactive" class="bg-light-bg dark:bg-dark-bg">Nonaktif</option>
                         </select>
-                    </div>
-                </div>
+                                    </div>
+                                </div>
             </Card>
 
-            <!-- Users Table -->
+                        <!-- Users Table -->
             <Card>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-[var(--border-primary)]">
@@ -71,40 +71,40 @@
                                 <th scope="col" class="relative px-6 py-3">
                                     <span class="sr-only">Actions</span>
                                 </th>
-                            </tr>
-                        </thead>
+                                    </tr>
+                                </thead>
                         <tbody class="bg-[var(--bg-secondary)] divide-y divide-[var(--border-primary)]">
                             <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-[var(--bg-secondary)]/50">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="h-10 w-10 flex-shrink-0">
-                                            <img
+                                            <div class="flex items-center">
+                                                <div class="h-10 w-10 flex-shrink-0">
+                                                    <img 
                                                 :src="user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&color=fff`"
                                                 :alt="user.name"
-                                                class="h-10 w-10 rounded-full object-cover"
+                                                        class="h-10 w-10 rounded-full object-cover"
                                             />
-                                        </div>
-                                        <div class="ml-4">
+                                                </div>
+                                                <div class="ml-4">
                                             <div class="text-sm font-medium text-[var(--text-primary)]">
                                                 {{ user.name }}
                                             </div>
                                             <div class="text-sm text-[var(--text-secondary)]">
                                                 {{ user.email }}
                                             </div>
-                                        </div>
-                                    </div>
-                                </td>
+                                                </div>
+                                            </div>
+                                        </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex flex-wrap gap-2">
                                         <Badge 
-                                            v-for="role in user.roles" 
-                                            :key="role"
+                                                    v-for="role in user.roles" 
+                                                    :key="role"
                                             variant="primary"
-                                        >
-                                            {{ role }}
+                                                >
+                                                    {{ role }}
                                         </Badge>
-                                    </div>
-                                </td>
+                                            </div>
+                                        </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <Badge 
                                         :variant="user.status === 'active' ? 'success' : 'warning'"
@@ -114,26 +114,26 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">
                                     {{ formatDate(user.created_at) }}
-                                </td>
+                                        </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end gap-3">
-                                        <Link
-                                            :href="route('admin.users.edit', user.id)"
+                                                <Link 
+                                                    :href="route('admin.users.edit', user.id)"
                                             class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
-                                        >
-                                            Edit
-                                        </Link>
-                                        <button
+                                                >
+                                                    Edit
+                                                </Link>
+                                                <button 
                                             @click="confirmUserDeletion(user)"
                                             class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
-                                        >
-                                            Hapus
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                                >
+                                                    Hapus
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                 </div>
             </Card>
         </div>
@@ -213,14 +213,14 @@ const filteredUsers = computed(() => {
     
     // Filter berdasarkan pencarian
     if (search.value) {
-        const searchTerm = search.value.toLowerCase();
+    const searchTerm = search.value.toLowerCase();
         result = result.filter(user => 
-            user.name.toLowerCase().includes(searchTerm) ||
-            user.email.toLowerCase().includes(searchTerm) ||
-            user.phone?.toLowerCase().includes(searchTerm) ||
-            user.roles.some(role => role.toLowerCase().includes(searchTerm)) ||
-            user.status.toLowerCase().includes(searchTerm)
-        );
+        user.name.toLowerCase().includes(searchTerm) ||
+        user.email.toLowerCase().includes(searchTerm) ||
+        user.phone?.toLowerCase().includes(searchTerm) ||
+        user.roles.some(role => role.toLowerCase().includes(searchTerm)) ||
+        user.status.toLowerCase().includes(searchTerm)
+    );
     }
     
     // Filter berdasarkan role
@@ -266,4 +266,22 @@ const formatDate = (date) => {
         day: 'numeric'
     });
 };
-</script> 
+</script>
+
+<style scoped>
+/* Styling untuk select dropdown */
+select {
+    min-width: 150px;
+    padding: 0.5rem;
+}
+
+select option {
+    padding: 8px;
+    margin: 4px;
+}
+
+/* Transisi halus untuk perubahan tema */
+.theme-transition {
+    transition: all 0.3s ease;
+}
+</style> 

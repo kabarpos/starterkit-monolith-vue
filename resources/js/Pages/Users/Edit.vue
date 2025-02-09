@@ -51,15 +51,19 @@
 
                 <div>
                     <InputLabel for="roles" value="Role" />
-                    <div class="mt-2 space-y-2">
-                        <label v-for="role in roles" :key="role" class="inline-flex items-center">
-                            <input
-                                type="checkbox"
-                                :value="role"
-                                v-model="form.roles"
-                                class="rounded border-[var(--border-primary)] text-[var(--primary-600)] focus:ring-[var(--primary-500)]"
-                            />
-                            <span class="ml-2 text-[var(--text-primary)]">{{ role }}</span>
+                    <div class="mt-2 grid grid-cols-2 gap-4">
+                        <label v-for="role in roles" :key="role.id || role" class="relative flex items-start">
+                            <div class="flex items-center h-5">
+                                <input
+                                    type="checkbox"
+                                    :value="getRoleName(role)"
+                                    v-model="form.roles"
+                                    class="h-4 w-4 rounded border-light-border dark:border-dark-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:bg-dark-card"
+                                />
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <span class="font-medium text-light-text dark:text-dark-text">{{ getRoleName(role) }}</span>
+                            </div>
                         </label>
                     </div>
                     <InputError :message="form.errors.roles" class="mt-2" />
@@ -70,11 +74,10 @@
                     <select
                         id="status"
                         v-model="form.status"
-                        class="mt-1 block w-full rounded-lg border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)]"
-                        required
+                        class="mt-1 block w-full rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                     >
-                        <option value="active">Aktif</option>
-                        <option value="inactive">Nonaktif</option>
+                        <option value="active" class="text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg">Aktif</option>
+                        <option value="inactive" class="text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg">Nonaktif</option>
                     </select>
                     <InputError :message="form.errors.status" class="mt-2" />
                 </div>
@@ -107,6 +110,7 @@ import Card from '@/Components/Card.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     auth: {
@@ -123,11 +127,18 @@ const props = defineProps({
     }
 });
 
+// Format roles untuk form
+const formattedRoles = computed(() => {
+    return props.user.roles.map(role => {
+        return typeof role === 'object' ? role.name : role;
+    });
+});
+
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
     phone: props.user.phone,
-    roles: props.user.roles,
+    roles: formattedRoles.value,
     status: props.user.status
 });
 
@@ -136,4 +147,28 @@ const submit = () => {
         preserveScroll: true
     });
 };
-</script> 
+
+// Helper untuk mendapatkan nama role
+const getRoleName = (role) => {
+    return typeof role === 'object' ? role.name : role;
+};
+</script>
+
+<style scoped>
+/* Styling untuk select dropdown */
+select option {
+    padding: 8px;
+    margin: 4px;
+}
+
+/* Memastikan checkbox memiliki ukuran yang konsisten */
+input[type="checkbox"] {
+    min-width: 1rem;
+    min-height: 1rem;
+}
+
+/* Transisi halus untuk perubahan tema */
+.theme-transition {
+    transition: all 0.3s ease;
+}
+</style> 

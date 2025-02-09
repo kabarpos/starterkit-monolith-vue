@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { Link, router } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {
@@ -49,7 +49,42 @@ const props = defineProps({
     }
 });
 
+// Dark Mode State
+const isDark = ref(false);
+
+// Fungsi untuk mengupdate tema
+const updateTheme = (dark) => {
+    if (dark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
+        localStorage.theme = 'dark';
+    } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.style.colorScheme = 'light';
+        localStorage.theme = 'light';
+    }
+};
+
+// Watch perubahan isDark
+watch(isDark, (newValue) => {
+    updateTheme(newValue);
+});
+
 onMounted(() => {
+    // Check sistem preferensi dan localStorage
+    const darkMode = localStorage.theme === 'dark' || 
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    isDark.value = darkMode;
+    updateTheme(darkMode);
+
+    // Listen untuk perubahan preferensi sistem
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.theme) { // Hanya update jika user belum set preferensi
+            isDark.value = e.matches;
+        }
+    });
+
     console.log('Auth Data:', props.auth);
     console.log('User Data:', props.auth?.user);
     console.log('User Roles:', props.auth?.user?.roles);
@@ -78,152 +113,159 @@ const isAdmin = computed(() => {
 const userData = computed(() => {
     return props.auth?.user;
 });
+
+const toggleDarkMode = () => {
+    isDark.value = !isDark.value;
+};
 </script>
 
 <template>
     <Head :title="title" />
 
-    <div class="min-h-screen bg-[var(--bg-gradient)] animated-gradient">
+    <div class="min-h-screen bg-light-bg dark:bg-dark-bg theme-transition">
         <!-- Sidebar -->
         <div
-            class="fixed inset-y-0 w-64 flex-col bg-[var(--card-gradient)] backdrop-blur-xl border-r border-[var(--border-primary)] shadow-lg transition-all duration-300"
+            class="fixed inset-y-0 w-64 flex-col bg-white dark:bg-dark-bg border-r border-light-border dark:border-dark-border shadow-lg transition-all duration-300"
             :class="{ 'hidden md:flex': !isSidebarOpen, flex: isSidebarOpen }"
         >
             <!-- Sidebar header -->
-            <div class="flex h-16 shrink-0 items-center px-6 border-b border-[var(--border-primary)]">
-                <ApplicationLogo class="h-8 w-auto transition-transform hover:scale-105" />
-                <span class="ml-2 text-xl font-semibold text-[var(--text-primary)]">Siohioma</span>
+            <div class="flex h-16 shrink-0 items-center px-6 border-b border-light-border dark:border-dark-border">
+                <ApplicationLogo class="h-8 w-auto text-primary-500" />
+                <span class="ml-2 text-xl font-semibold text-primary-500">StarAdmin</span>
             </div>
 
             <!-- Sidebar content -->
             <div class="flex flex-1 flex-col overflow-y-auto custom-scrollbar">
                 <nav class="flex-1 px-4 py-4">
-                    <!-- Dashboard Section -->
-                    <div class="space-y-8">
+                    <div class="space-y-4">
+                        <!-- Dashboard Section -->
                         <div>
-                            <p class="px-2 text-sm font-semibold text-[var(--text-secondary)] mb-4">
-                                DASHBOARD
+                            <Link
+                                :href="route('dashboard')"
+                                class="flex items-center px-3 py-2 text-sm text-primary-500 bg-primary-50 dark:bg-primary-500/10 rounded-lg"
+                            >
+                                <ChartBarIcon class="h-5 w-5 mr-2" />
+                                Dashboard
+                            </Link>
+                        </div>
+
+                        <!-- UI Elements Section -->
+                        <div>
+                            <p class="px-3 text-xs font-medium text-light-text/60 dark:text-dark-text/60 uppercase tracking-wider">
+                                UI Elements
                             </p>
-                            <div class="space-y-1">
-                                <template v-for="item in navigation" :key="item.name">
-                                    <Link
-                                        :href="item.href"
-                                        :class="[
-                                            item.current
-                                                ? 'bg-[var(--primary-50)] dark:bg-[var(--primary-900)]/20 text-[var(--primary-600)] dark:text-[var(--primary-400)]'
-                                                : 'text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50',
-                                            'group flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors duration-150',
-                                        ]"
-                                    >
-                                        <component
-                                            :is="item.icon"
-                                            :class="[
-                                                item.current
-                                                    ? 'text-[var(--primary-600)] dark:text-[var(--primary-400)]'
-                                                    : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]',
-                                                'mr-3 flex-shrink-0 h-6 w-6 transition-colors duration-150',
-                                            ]"
-                                        />
-                                        {{ item.name }}
-                                        <span
-                                            v-if="item.count"
-                                            class="ml-auto inline-block py-0.5 px-2 text-xs rounded-full bg-[var(--primary-100)] dark:bg-[var(--primary-900)]/30 text-[var(--primary-600)] dark:text-[var(--primary-400)]"
-                                        >
-                                            {{ item.count }}
-                                        </span>
-                                    </Link>
-                                </template>
+                            <div class="mt-2 space-y-1">
+                                <Link
+                                    href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-light-text dark:text-dark-text hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 rounded-lg transition-colors"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                    Widgets
+                                </Link>
+                                <Link
+                                    href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-light-text dark:text-dark-text hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 rounded-lg transition-colors"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    Charts
+                                </Link>
                             </div>
                         </div>
 
                         <!-- Admin Section -->
                         <div v-if="isAdmin">
-                            <p class="px-2 text-sm font-semibold text-[var(--text-secondary)] mb-4">
-                                ADMIN AREA
+                            <p class="px-3 text-xs font-medium text-light-text/60 dark:text-dark-text/60 uppercase tracking-wider">
+                                Admin Area
                             </p>
-                            <div class="space-y-1">
-                                <template v-for="item in admin" :key="item.name">
-                                    <Link
-                                        :href="item.href"
-                                        class="text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50 group flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors duration-150"
-                                    >
-                                        <component
-                                            :is="item.icon"
-                                            class="text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] mr-3 flex-shrink-0 h-6 w-6 transition-colors duration-150"
-                                        />
-                                        {{ item.name }}
-                                    </Link>
-                                </template>
+                            <div class="mt-2 space-y-1">
+                                <Link
+                                    v-for="item in admin"
+                                    :key="item.name"
+                                    :href="item.href"
+                                    class="flex items-center px-3 py-2 text-sm text-light-text dark:text-dark-text hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 rounded-lg transition-colors"
+                                >
+                                    <component
+                                        :is="item.icon"
+                                        class="h-5 w-5 mr-2"
+                                    />
+                                    {{ item.name }}
+                                </Link>
                             </div>
                         </div>
                     </div>
                 </nav>
 
-                <!-- Bottom Section -->
-                <div class="mt-auto">
+                <!-- Bottom Section with User Profile -->
+                <div class="mt-auto space-y-4 p-4 border-t border-light-border dark:border-dark-border">
+                    <!-- Dark Mode Toggle -->
+                    <button
+                        @click="toggleDarkMode"
+                        class="w-full flex items-center px-2 py-2 text-sm text-light-text dark:text-dark-text rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+                    >
+                        <div class="p-1.5 rounded-lg bg-light-card dark:bg-dark-card">
+                            <svg v-if="!isDark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        </div>
+                        <span class="ml-3">{{ isDark ? 'Dark Mode' : 'Light Mode' }}</span>
+                    </button>
+
                     <!-- User Profile -->
-                    <div v-if="userData" class="border-t border-[var(--border-primary)] p-4">
-                        <div class="flex items-center">
+                    <div v-if="userData" class="relative">
+                        <button 
+                            @click="isProfileMenuOpen = !isProfileMenuOpen"
+                            class="flex items-center w-full px-2 py-2 text-sm text-light-text dark:text-dark-text rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
+                        >
                             <img
-                                class="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--bg-secondary)] dark:ring-[var(--neutral-700)]"
                                 :src="userData.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random&color=fff`"
                                 :alt="userData.name"
+                                class="h-8 w-8 rounded-full object-cover"
                             />
-                            <div class="relative ml-3 flex-grow">
-                                <div class="group">
-                                    <button 
-                                        class="flex items-center justify-between w-full text-left"
-                                        @click="isProfileMenuOpen = !isProfileMenuOpen"
-                                    >
-                                        <div>
-                                            <p class="text-sm font-medium text-[var(--text-primary)]">
-                                                {{ userData.name }}
-                                            </p>
-                                            <p class="text-xs text-[var(--text-secondary)]">
-                                                {{ userData.email }}
-                                            </p>
-                                        </div>
-                                        <svg 
-                                            class="h-5 w-5 text-[var(--text-secondary)] transition-transform duration-200" 
-                                            :class="{ 'rotate-180': isProfileMenuOpen }"
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            viewBox="0 0 20 20" 
-                                            fill="currentColor"
-                                        >
-                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                    
-                                    <!-- Profile Dropdown Menu -->
-                                    <div 
-                                        v-show="isProfileMenuOpen"
-                                        class="absolute bottom-full left-0 right-0 mb-2 bg-[var(--card-gradient)] rounded-lg shadow-lg py-1 border border-[var(--border-primary)]"
-                                    >
-                                        <Link
-                                            :href="route('profile.edit')"
-                                            class="block px-4 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50 transition-colors duration-150"
-                                        >
-                                            <div class="flex items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                                Edit Profile
-                                            </div>
-                                        </Link>
-                                        <button
-                                            @click="logout"
-                                            class="block w-full text-left px-4 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]/50 transition-colors duration-150"
-                                        >
-                                            <div class="flex items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                                </svg>
-                                                Logout
-                                            </div>
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="ml-3 flex-1 text-left">
+                                <p class="text-sm font-medium text-light-text dark:text-dark-text">{{ userData.name }}</p>
+                                <p class="text-xs text-light-text/60 dark:text-dark-text/60">{{ userData.email }}</p>
                             </div>
+                            <svg 
+                                class="h-5 w-5 text-light-text/60 dark:text-dark-text/60 transition-transform duration-200" 
+                                :class="{ 'rotate-180': isProfileMenuOpen }"
+                                xmlns="http://www.w3.org/2000/svg" 
+                                viewBox="0 0 20 20" 
+                                fill="currentColor"
+                            >
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div 
+                            v-show="isProfileMenuOpen"
+                            class="absolute bottom-full left-0 right-0 mb-2 bg-light-card dark:bg-dark-card rounded-lg shadow-lg py-1 border border-light-border dark:border-dark-border"
+                        >
+                            <Link
+                                :href="route('profile.edit')"
+                                class="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg hover:text-primary-500 transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Edit Profile
+                            </Link>
+                            <button
+                                @click="logout"
+                                class="w-full flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg hover:text-red-500 transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -231,47 +273,53 @@ const userData = computed(() => {
         </div>
 
         <!-- Main content -->
-        <div class="md:pl-64 min-h-screen">
+        <div class="md:pl-64 min-h-screen bg-light-bg dark:bg-dark-bg">
             <!-- Top header -->
-            <div class="sticky top-0 z-10 bg-[var(--card-gradient)] backdrop-blur-xl border-b border-[var(--border-primary)] shadow-sm transition-all duration-300 md:hidden">
+            <div class="sticky top-0 z-10 bg-white/80 dark:bg-dark-bg/80 border-b border-light-border dark:border-dark-border backdrop-blur-lg">
                 <div class="flex h-16 items-center justify-between px-6">
-                    <button
-                        @click="isSidebarOpen = !isSidebarOpen"
-                        class="rounded-lg p-2 text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]/50 focus:outline-none"
-                    >
-                        <span class="sr-only">Open sidebar</span>
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                    <ApplicationLogo class="h-8 w-auto" />
+                    <div class="flex items-center">
+                        <button
+                            @click="isSidebarOpen = !isSidebarOpen"
+                            class="md:hidden rounded-lg p-2 text-light-text/60 dark:text-dark-text/60 hover:text-light-text dark:hover:text-dark-text hover:bg-light-card dark:hover:bg-dark-card focus:outline-none"
+                        >
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <div class="ml-4">
+                            <h1 class="text-xl font-semibold text-light-text dark:text-dark-text">Halo, {{ userData?.name }}</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                placeholder="Search" 
+                                class="w-64 px-4 py-2 text-sm text-light-text dark:text-dark-text bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                            />
+                            <svg class="absolute right-3 top-2.5 h-5 w-5 text-light-text/60 dark:text-dark-text/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Page content -->
             <main class="py-6 px-6">
-                <header v-if="$slots.header" class="mb-6">
-                    <slot name="header" />
-                </header>
-                <div class="transition-all duration-300">
+                <div class="max-w-7xl mx-auto">
                     <slot />
                 </div>
             </main>
         </div>
-
-        <!-- Dark Mode Toggle -->
-        <DarkModeToggle />
     </div>
 </template>
 
 <style scoped>
 .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgba(203, 213, 225, 0.2) transparent;
-}
-
-.dark .custom-scrollbar {
-    scrollbar-color: rgba(51, 65, 85, 0.2) transparent;
+    scrollbar-color: rgba(107, 114, 128, 0.3) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -283,37 +331,17 @@ const userData = computed(() => {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(203, 213, 225, 0.2);
+    background-color: rgba(107, 114, 128, 0.3);
     border-radius: 2px;
 }
 
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(51, 65, 85, 0.2);
-}
-
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(203, 213, 225, 0.3);
+    background-color: rgba(107, 114, 128, 0.5);
 }
 
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(51, 65, 85, 0.3);
-}
-
-/* Tambahkan animasi gradient */
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-.bg-\[var\(--bg-gradient\)\] {
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+.theme-transition {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease;
 }
 </style>
