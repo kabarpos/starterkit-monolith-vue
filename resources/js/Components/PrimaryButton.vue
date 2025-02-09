@@ -23,7 +23,7 @@ defineProps({
             // Variants
             variant === 'primary' && 'bg-gradient-to-r from-[var(--primary-600)] to-[var(--accent-600)] hover:from-[var(--primary-700)] hover:to-[var(--accent-700)] text-white focus:ring-[var(--primary-500)] dark:focus:ring-offset-[var(--neutral-800)]',
             variant === 'secondary' && 'bg-[var(--card-gradient)] border border-[var(--border-primary)] text-[var(--text-primary)] hover:border-[var(--primary-400)] focus:ring-[var(--neutral-500)]',
-            variant === 'danger' && 'bg-gradient-to-r from-[var(--error-600)] to-[var(--error-500)] hover:from-[var(--error-700)] hover:to-[var(--error-600)] text-white focus:ring-[var(--error-500)]',
+            variant === 'danger' && 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white focus:ring-red-500 dark:focus:ring-offset-[var(--neutral-800)]',
             // Sizes
             size === 'sm' && 'px-3 py-1.5 text-sm rounded-lg',
             size === 'md' && 'px-4 py-2 text-sm rounded-lg',

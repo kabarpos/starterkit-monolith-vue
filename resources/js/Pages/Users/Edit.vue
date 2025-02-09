@@ -109,14 +109,16 @@
                     >
                         Batal
                     </Link>
-                    <button
+                    <PrimaryButton
                         type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
                         :disabled="form.processing"
+                        variant="primary"
+                        size="md"
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                     >
                         <span v-if="form.processing">Memproses...</span>
                         <span v-else>Simpan Perubahan</span>
-                    </button>
+                    </PrimaryButton>
                 </div>
             </form>
         </Card>
@@ -130,6 +132,7 @@ import Card from '@/Components/Card.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { computed } from 'vue';
 
 const props = defineProps({

@@ -101,7 +101,15 @@ const updatePassword = () => {
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton 
+                    :disabled="form.processing" 
+                    variant="primary" 
+                    size="md"
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                    <span v-if="form.processing">Memproses...</span>
+                    <span v-else>Save</span>
+                </PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"

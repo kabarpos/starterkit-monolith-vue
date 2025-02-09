@@ -7,6 +7,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
@@ -52,7 +53,14 @@ const closeModal = () => {
             </p>
         </header>
 
-        <DangerButton @click="confirmUserDeletion">Delete Account</DangerButton>
+        <PrimaryButton 
+            @click="confirmUserDeletion" 
+            variant="danger" 
+            size="md"
+            class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600"
+        >
+            Delete Account
+        </PrimaryButton>
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
             <div class="p-6">
@@ -89,18 +97,24 @@ const closeModal = () => {
                 </div>
 
                 <div class="mt-6 flex justify-end">
-                    <SecondaryButton @click="closeModal">
+                    <PrimaryButton 
+                        @click="closeModal" 
+                        variant="secondary" 
+                        size="md"
+                    >
                         Cancel
-                    </SecondaryButton>
+                    </PrimaryButton>
 
-                    <DangerButton
-                        class="ms-3"
+                    <PrimaryButton
+                        class="ms-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600"
+                        variant="danger"
+                        size="md"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
                         Delete Account
-                    </DangerButton>
+                    </PrimaryButton>
                 </div>
             </div>
         </Modal>

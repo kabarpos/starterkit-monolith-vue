@@ -202,7 +202,9 @@ const submit = () => {
             <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <PrimaryButton 
                     :disabled="form.processing"
-                    class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    variant="primary"
+                    size="md"
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                 >
                     <span v-if="form.processing">Menyimpan...</span>
                     <span v-else>Simpan Perubahan</span>
