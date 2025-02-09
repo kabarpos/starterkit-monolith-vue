@@ -174,15 +174,15 @@
                 </p>
 
                 <div class="mt-6 flex justify-end gap-4">
-                    <SecondaryButton @click="closeModal" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <SecondaryButton @click="closeModal">
                         Batal
                     </SecondaryButton>
 
                     <DangerButton
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
+                        class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600"
+                        :class="{ 'opacity-25': processing }"
+                        :disabled="processing"
                         @click="deleteUser"
-                        class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white"
                     >
                         Hapus Pengguna
                     </DangerButton>
@@ -205,6 +205,7 @@ import { Head } from '@inertiajs/vue3';
 import Card from '@/Components/Card.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Badge from '@/Components/Badge.vue';
+import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     auth: {
@@ -224,6 +225,7 @@ const props = defineProps({
 const search = ref('');
 const selectedUser = ref(null);
 const confirmingUserDeletion = ref(false);
+const processing = ref(false);
 
 // Tambahkan state filters
 const filters = ref({
@@ -267,6 +269,7 @@ const filteredUsers = computed(() => {
 const closeModal = () => {
     confirmingUserDeletion.value = false;
     selectedUser.value = null;
+    processing.value = false;
 };
 
 const confirmUserDeletion = (user) => {
@@ -276,9 +279,18 @@ const confirmUserDeletion = (user) => {
 
 const deleteUser = () => {
     if (selectedUser.value) {
+        processing.value = true;
         router.delete(route('admin.users.destroy', selectedUser.value.id), {
             preserveScroll: true,
-            onSuccess: () => closeModal(),
+            onSuccess: () => {
+                closeModal();
+            },
+            onError: () => {
+                processing.value = false;
+            },
+            onFinish: () => {
+                processing.value = false;
+            }
         });
     }
 };
