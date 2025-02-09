@@ -10,7 +10,7 @@
             </div>
         </template>
 
-        <Card class="max-w-2xl mx-auto">
+        <Card class="max-w-6xl mx-auto">
             <form @submit.prevent="submit" class="space-y-6">
                 <div>
                     <InputLabel for="name" value="Nama Role" />
@@ -25,42 +25,131 @@
                     <InputError :message="form.errors.name" class="mt-2" />
                 </div>
 
-                <div>
-                    <InputLabel for="permissions" value="Permissions" />
-                    <div class="mt-4 space-y-4">
-                        <div v-for="(permissionGroup, module) in groupedPermissions" :key="module" class="space-y-2">
-                            <h3 class="font-medium text-[var(--text-primary)]">{{ module }}</h3>
-                            <div class="ml-4 grid grid-cols-2 gap-4">
-                                <label v-for="permission in permissionGroup" :key="permission" class="inline-flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        :value="permission"
-                                        v-model="form.permissions"
-                                        class="rounded border-[var(--border-primary)] text-[var(--primary-600)] focus:ring-[var(--primary-500)]"
-                                    />
-                                    <span class="ml-2 text-[var(--text-primary)]">{{ permission }}</span>
-                                </label>
-                            </div>
-                        </div>
+                <!-- Permission Table -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-medium text-[var(--text-primary)] mb-4">
+                        Permissions
+                    </h3>
+                    
+                    <!-- Search & Filter -->
+                    <div class="mb-4">
+                        <TextInput
+                            v-model="searchQuery"
+                            type="text"
+                            placeholder="Cari permission..."
+                            class="w-full md:w-64"
+                        />
                     </div>
-                    <InputError :message="form.errors.permissions" class="mt-2" />
+
+                    <div class="overflow-x-auto border border-[var(--border-color)] rounded-lg">
+                        <table class="min-w-full divide-y divide-[var(--border-color)]">
+                            <thead class="bg-[var(--bg-secondary)]">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                        Module
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                        View
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                        Create
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                        Edit
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                        Delete
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-[var(--bg-primary)] divide-y divide-[var(--border-color)]">
+                                <!-- Users Module -->
+                                <tr v-show="showModule('users')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--text-primary)]">
+                                        Users
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'view users'"
+                                            :name="'view users'"
+                                        />
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'create users'"
+                                            :name="'create users'"
+                                        />
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'edit users'"
+                                            :name="'edit users'"
+                                        />
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'delete users'"
+                                            :name="'delete users'"
+                                        />
+                                    </td>
+                                </tr>
+                                <!-- Roles Module -->
+                                <tr v-show="showModule('roles')">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--text-primary)]">
+                                        Roles
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'view roles'"
+                                            :name="'view roles'"
+                                        />
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'create roles'"
+                                            :name="'create roles'"
+                                        />
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'edit roles'"
+                                            :name="'edit roles'"
+                                        />
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <Checkbox
+                                            v-model:checked="form.permissions"
+                                            :value="'delete roles'"
+                                            :name="'delete roles'"
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div class="flex items-center justify-end gap-4">
+                <div class="flex items-center justify-end gap-4 mt-6">
                     <Link
                         :href="route('admin.roles.index')"
-                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                        class="px-4 py-2 text-sm font-medium text-[var(--text-primary)] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                     >
                         Batal
                     </Link>
-                    <button
-                        type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                    <PrimaryButton
+                        :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-200"
                     >
-                        <span v-if="form.processing">Memproses...</span>
-                        <span v-else>Simpan Perubahan</span>
-                    </button>
+                        Simpan Perubahan
+                    </PrimaryButton>
                 </div>
             </form>
         </Card>
@@ -68,13 +157,15 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Card from '@/Components/Card.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
-import { computed } from 'vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import Checkbox from '@/Components/Checkbox.vue';
 
 const props = defineProps({
     auth: {
@@ -84,42 +175,27 @@ const props = defineProps({
     role: {
         type: Object,
         required: true
-    },
-    permissions: {
-        type: Array,
-        required: true
     }
-});
-
-const groupedPermissions = computed(() => {
-    return props.permissions.reduce((groups, permission) => {
-        if (typeof permission === 'string' && permission.includes('.')) {
-            const [module] = permission.split('.');
-            if (!groups[module]) {
-                groups[module] = [];
-            }
-            groups[module].push(permission);
-        } else if (typeof permission === 'object' && permission.name) {
-            const [module] = permission.name.split('.');
-            if (!groups[module]) {
-                groups[module] = [];
-            }
-            groups[module].push(permission.name);
-        }
-        return groups;
-    }, {});
 });
 
 const form = useForm({
     name: props.role.name,
-    permissions: Array.isArray(props.role.permissions) 
-        ? props.role.permissions.map(p => typeof p === 'string' ? p : p.name)
-        : []
+    permissions: props.role.permissions || []
 });
 
+const searchQuery = ref('');
+
+// Method untuk filter module berdasarkan search query
+const showModule = (moduleName) => {
+    if (!searchQuery.value) return true;
+    return moduleName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+           form.permissions.some(permission => 
+               permission.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
+               permission.includes(moduleName)
+           );
+};
+
 const submit = () => {
-    form.put(route('admin.roles.update', props.role.id), {
-        preserveScroll: true
-    });
+    form.put(route('admin.roles.update', props.role.id));
 };
 </script> 
