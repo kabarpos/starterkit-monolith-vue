@@ -17,7 +17,7 @@ const activeTab = ref('Overview');
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout :auth="auth">
+    <AuthenticatedLayout :auth="auth" title="Dashboard">
         <template #header>
             <h2 class="text-2xl font-bold text-[var(--text-primary)]">
                 Dashboard

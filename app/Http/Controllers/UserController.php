@@ -29,7 +29,8 @@ class UserController extends Controller
                     'created_at' => $user->created_at->format('d M Y'),
                     'avatar' => $user->avatar,
                     'avatar_url' => $user->avatar ? asset('storage/' . $user->avatar) : null
-                ])
+                ]),
+            'roles' => Role::all()->pluck('name'),
         ]);
     }
 

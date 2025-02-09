@@ -1,7 +1,7 @@
 <template>
     <Head title="Edit User" />
 
-    <AuthenticatedLayout :auth="auth">
+    <AuthenticatedLayout :auth="auth" title="Edit Pengguna">
         <template #header>
             <div class="flex items-center justify-between">
                 <h2 class="text-2xl font-bold text-[var(--text-primary)]">

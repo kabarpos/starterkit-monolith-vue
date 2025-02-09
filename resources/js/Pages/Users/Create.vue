@@ -1,7 +1,7 @@
 <template>
     <Head title="Create User" />
 
-    <AuthenticatedLayout :auth="auth">
+    <AuthenticatedLayout :auth="auth" title="Tambah Pengguna">
         <template #header>
             <div class="flex items-center justify-between">
                 <h2 class="text-2xl font-bold text-[var(--text-primary)]">
@@ -75,15 +75,15 @@
 
                 <div>
                     <InputLabel for="roles" value="Role" />
-                    <div class="mt-2 space-y-2">
-                        <label v-for="role in roles" :key="role" class="inline-flex items-center">
+                    <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label v-for="role in roles" :key="role.id" class="inline-flex items-center space-x-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer">
                             <input
                                 type="checkbox"
-                                :value="role"
+                                :value="role.name"
                                 v-model="form.roles"
-                                class="rounded border-[var(--border-primary)] text-[var(--primary-600)] focus:ring-[var(--primary-500)]"
+                                class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400"
                             />
-                            <span class="ml-2 text-[var(--text-primary)]">{{ role }}</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ getRoleLabel(role.name) }}</span>
                         </label>
                     </div>
                     <InputError :message="form.errors.roles" class="mt-2" />
@@ -97,8 +97,13 @@
                         class="mt-1 block w-full rounded-lg border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)]"
                         required
                     >
-                        <option value="active">Aktif</option>
-                        <option value="inactive">Nonaktif</option>
+                        <option v-for="status in statusOptions" 
+                                :key="status.value" 
+                                :value="status.value"
+                                class="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+                        >
+                            {{ status.label }}
+                        </option>
                     </select>
                     <InputError :message="form.errors.status" class="mt-2" />
                 </div>
@@ -139,7 +144,8 @@ const props = defineProps({
     },
     roles: {
         type: Array,
-        required: true
+        required: true,
+        default: () => []
     }
 });
 
@@ -153,9 +159,37 @@ const form = useForm({
     status: 'active'
 });
 
+// Helper untuk label role
+const getRoleLabel = (roleName) => {
+    const labels = {
+        'admin': 'Administrator',
+        'user': 'Pengguna',
+    };
+    return labels[roleName] || roleName;
+};
+
+// Status options dengan label yang lebih deskriptif
+const statusOptions = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'active', label: 'Aktif' },
+    { value: 'inactive', label: 'Nonaktif' }
+];
+
 const submit = () => {
     form.post(route('admin.users.store'), {
         preserveScroll: true
     });
 };
-</script> 
+</script>
+
+<style scoped>
+/* Style untuk select dan option dalam dark mode */
+select option {
+    @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+}
+
+/* Hover effect untuk checkbox container */
+.checkbox-container:hover {
+    @apply bg-gray-50 dark:bg-gray-800;
+}
+</style> 

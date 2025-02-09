@@ -1,15 +1,16 @@
 <template>
     <Head title="Users" />
 
-    <AuthenticatedLayout :auth="auth">
+    <AuthenticatedLayout :auth="auth" title="Manajemen Pengguna">
         <template #header>
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between w-full">
                 <h2 class="text-2xl font-bold text-[var(--text-primary)]">
                     Manajemen Pengguna
                 </h2>
                 <Link
                     :href="route('admin.users.create')"
-                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                    class="relative inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                    style="z-index: 50;"
                 >
                     Tambah Pengguna
                 </Link>
@@ -37,8 +38,13 @@
                             class="flex-1 md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
                             <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Role</option>
-                            <option v-for="role in roles" :key="role" :value="role" class="bg-light-bg dark:bg-dark-bg">
-                                {{ role }}
+                            <option 
+                                v-for="role in roles" 
+                                :key="role" 
+                                :value="role" 
+                                class="bg-light-bg dark:bg-dark-bg capitalize"
+                            >
+                                {{ getRoleLabel(role) }}
                             </option>
                         </select>
                         <select
@@ -59,10 +65,10 @@
                         <!-- Users Table -->
             <Card>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-[var(--border-primary)]">
+                    <table class="min-w-full">
                         <!-- Responsive table headers -->
-                        <thead class="bg-[var(--bg-secondary)]">
-                            <tr>
+                        <thead>
+                            <tr class="border-b border-gray-200/50 dark:border-gray-700/25">
                                 <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
                                     Pengguna
                                 </th>
@@ -78,12 +84,12 @@
                                 <th scope="col" class="relative px-4 sm:px-6 py-3">
                                     <span class="sr-only">Actions</span>
                                 </th>
-                                    </tr>
-                                </thead>
+                            </tr>
+                        </thead>
 
                         <!-- Responsive table body -->
-                        <tbody class="bg-[var(--bg-secondary)] divide-y divide-[var(--border-primary)]">
-                            <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-[var(--bg-secondary)]/50">
+                        <tbody>
+                            <tr v-for="user in filteredUsers" :key="user.id" class="border-b border-gray-200/50 dark:border-gray-700/25 hover:bg-[var(--bg-secondary)]/50">
                                 <!-- User info - simplified for mobile -->
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
@@ -306,6 +312,16 @@ const getStatusLabel = (status) => {
         'inactive': 'Nonaktif'
     };
     return labels[status] || status;
+};
+
+// Tambahkan helper function untuk label role
+const getRoleLabel = (role) => {
+    const labels = {
+        'admin': 'Administrator',
+        'user': 'Pengguna',
+        // Tambahkan label untuk role lainnya jika ada
+    };
+    return labels[role] || role;
 };
 </script>
 
