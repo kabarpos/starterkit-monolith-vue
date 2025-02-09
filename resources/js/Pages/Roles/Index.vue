@@ -3,17 +3,24 @@
 
     <AuthenticatedLayout :auth="auth" title="Manajemen Role">
         <template #header>
-            <div class="flex items-center justify-between w-full">
-                <h2 class="text-2xl font-bold text-[var(--text-primary)]">
-                    Manajemen Role
-                </h2>
-                <Link
-                    :href="route('admin.roles.create')"
-                    class="relative inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
-                    style="z-index: 50;"
-                >
-                    Tambah Role
-                </Link>
+            <div class="w-full">
+                <div class="flex items-center justify-between">
+                    <!-- Title dengan ukuran yang lebih kecil -->
+                    <h2 class="text-lg md:text-xl font-semibold text-[var(--text-primary)] truncate">
+                        Manajemen Role
+                    </h2>
+                    
+                    <!-- Tombol + yang lebih simpel -->
+                    <Link
+                        :href="route('admin.roles.create')"
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-colors duration-200"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Tambah Role</span>
+                    </Link>
+                </div>
             </div>
         </template>
 

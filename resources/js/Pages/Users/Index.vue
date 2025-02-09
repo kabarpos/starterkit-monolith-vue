@@ -3,28 +3,35 @@
 
     <AuthenticatedLayout :auth="auth" title="Manajemen Pengguna">
         <template #header>
-            <div class="flex items-center justify-between w-full">
-                <h2 class="text-2xl font-bold text-[var(--text-primary)]">
-                    Manajemen Pengguna
-                </h2>
-                <Link
-                    :href="route('admin.users.create')"
-                    class="relative inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
-                    style="z-index: 50;"
-                >
-                    Tambah Pengguna
-                </Link>
+            <div class="w-full">
+                <div class="flex items-center justify-between">
+                    <!-- Title dengan ukuran yang lebih kecil -->
+                    <h2 class="text-lg md:text-xl font-semibold text-[var(--text-primary)] truncate">
+                        Manajemen Pengguna
+                    </h2>
+                    
+                    <!-- Tombol + yang lebih simpel -->
+                    <Link
+                        :href="route('admin.users.create')"
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-colors duration-200"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Tambah Pengguna</span>
+                    </Link>
+                </div>
             </div>
         </template>
 
-        <div class="space-y-6">
-                        <!-- Search and Filter Section -->
+        <div class="space-y-4 sm:space-y-6">
+            <!-- Search and Filter Section -->
             <Card class="p-4">
-                <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex flex-col gap-4">
                     <!-- Search bar -->
-                    <div class="flex-1">
+                    <div class="w-full">
                         <TextInput
-                                        v-model="search"
+                            v-model="search"
                             type="search"
                             class="w-full"
                             placeholder="Cari pengguna..."
@@ -32,10 +39,10 @@
                     </div>
                     
                     <!-- Filter buttons -->
-                    <div class="flex flex-1 md:flex-none gap-3">
+                    <div class="flex flex-col sm:flex-row gap-3">
                         <select
                             v-model="filters.role"
-                            class="flex-1 md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                            class="w-full sm:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
                             <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Role</option>
                             <option 
@@ -49,7 +56,7 @@
                         </select>
                         <select
                             v-model="filters.status"
-                            class="flex-1 md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                            class="w-full sm:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
                         >
                             <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Status</option>
                             <option value="pending" class="bg-light-bg dark:bg-dark-bg">Pending</option>
@@ -58,11 +65,11 @@
                             <option value="banned" class="bg-light-bg dark:bg-dark-bg">Diblokir</option>
                             <option value="inactive" class="bg-light-bg dark:bg-dark-bg">Nonaktif</option>
                         </select>
-                                    </div>
-                                </div>
+                    </div>
+                </div>
             </Card>
 
-                        <!-- Users Table -->
+            <!-- Users Table -->
             <Card>
                 <div class="overflow-x-auto">
                     <table class="min-w-full">
