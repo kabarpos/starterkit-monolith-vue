@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title inertia></title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -35,6 +35,11 @@
             }
         });
     </script>
+
+    <!-- Dynamic Favicon -->
+    @if(Cache::has('website_settings') && !empty(Cache::get('website_settings')['site_favicon']))
+        <link rel="icon" href="{{ Storage::url(Cache::get('website_settings')['site_favicon']) }}" type="image/x-icon"/>
+    @endif
 
     @routes
     @vite(['resources/js/app.js', 'resources/css/app.css'])

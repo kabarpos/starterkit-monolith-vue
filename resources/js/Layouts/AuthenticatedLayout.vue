@@ -1,53 +1,32 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router, usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import {
-    ChartBarIcon,
-    UserGroupIcon,
-    ShieldCheckIcon,
-} from "@heroicons/vue/24/outline";
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import DarkModeToggle from '@/Components/DarkModeToggle.vue';
+import AppNavigation from '@/Components/Navigation/AppNavigation.vue';
 import { Head } from "@inertiajs/vue3";
 
 const isSidebarOpen = ref(false);
 const isProfileMenuOpen = ref(false);
 const showingNavigationDropdown = ref(false);
 
-// Navigation Links
-const navigation = [
-    { name: "Overview", href: "/dashboard", icon: ChartBarIcon, current: true },
-];
-
-const admin = [
-    { 
-        name: "User Management", 
-        href: route('admin.users.index'), 
-        icon: UserGroupIcon, 
-        current: false 
-    },
-    { 
-        name: "Role Management", 
-        href: route('admin.roles.index'), 
-        icon: ShieldCheckIcon, 
-        current: false 
-    },
-];
-
 const props = defineProps({
-    auth: {
-        type: Object,
-        required: true
-    },
     title: {
         type: String,
         required: true
     }
 });
+
+// Gunakan usePage untuk mendapatkan data auth
+const page = usePage();
+const auth = computed(() => page.props.auth);
+
+// Computed untuk user yang sudah terautentikasi
+const authenticatedUser = computed(() => auth.value?.user);
 
 // Dark Mode State
 const isDark = ref(false);
@@ -85,9 +64,9 @@ onMounted(() => {
         }
     });
 
-    console.log('Auth Data:', props.auth);
-    console.log('User Data:', props.auth?.user);
-    console.log('User Roles:', props.auth?.user?.roles);
+    console.log('Auth Data:', auth.value);
+    console.log('User Data:', auth.value?.user);
+    console.log('User Roles:', auth.value?.user?.roles);
 });
 
 const logout = () => {
@@ -96,7 +75,7 @@ const logout = () => {
 
 // Computed untuk mengecek role admin
 const isAdmin = computed(() => {
-    const roles = props.auth?.user?.roles || [];
+    const roles = auth.value?.user?.roles || [];
     console.log('Checking admin role:', roles);
     
     if (!roles || !Array.isArray(roles)) {
@@ -111,16 +90,31 @@ const isAdmin = computed(() => {
 
 // Computed untuk user data
 const userData = computed(() => {
-    return props.auth?.user;
+    return auth.value?.user;
 });
 
 const toggleDarkMode = () => {
     isDark.value = !isDark.value;
 };
+
+// Computed untuk website settings
+const websiteSettings = computed(() => ({
+    title: usePage().props.settings?.site_title || 'Website',
+    logo: usePage().props.settings?.site_logo || null,
+    favicon: usePage().props.settings?.site_favicon || null
+}));
+
+// Computed untuk logo URL
+const logoUrl = computed(() => {
+    if (websiteSettings.value.logo) {
+        return `/storage/${websiteSettings.value.logo}`;
+    }
+    return null;
+});
 </script>
 
 <template>
-    <Head :title="title" />
+    <Head :title="`${title} - ${websiteSettings.title}`" replace />
 
     <div class="min-h-screen bg-light-bg dark:bg-dark-bg theme-transition">
         <!-- Sidebar -->
@@ -130,48 +124,24 @@ const toggleDarkMode = () => {
         >
             <!-- Sidebar header -->
             <div class="flex h-16 shrink-0 items-center px-6 border-b border-light-border dark:border-dark-border">
-                <ApplicationLogo class="h-8 w-auto text-primary-500" />
-                <span class="ml-2 text-xl font-semibold text-primary-500">StarAdmin</span>
+                <!-- Show uploaded logo if exists, otherwise show default ApplicationLogo -->
+                <img 
+                    v-if="logoUrl"
+                    :src="logoUrl"
+                    :alt="websiteSettings.title"
+                    class="h-8 w-auto"
+                />
+                <ApplicationLogo v-else class="h-8 w-auto text-primary-500" />
+                
+                <span class="ml-2 text-xl font-semibold text-primary-500">
+                    {{ websiteSettings.title }}
+                </span>
             </div>
 
             <!-- Sidebar content -->
             <div class="flex flex-1 flex-col overflow-y-auto custom-scrollbar">
                 <nav class="flex-1 px-4 py-4">
-                    <div class="space-y-4">
-                    <!-- Dashboard Section -->
-                        <div>
-                            <Link
-                                :href="route('dashboard')"
-                                class="flex items-center px-3 py-2 text-sm text-primary-500 bg-primary-50 dark:bg-primary-500/10 rounded-lg"
-                            >
-                                <ChartBarIcon class="h-5 w-5 mr-2" />
-                                Dashboard
-                            </Link>
-                        </div>
-
-   
-
-                        <!-- Admin Section -->
-                        <div v-if="isAdmin">
-                            <p class="px-3 text-xs font-medium text-light-text/60 dark:text-dark-text/60 uppercase tracking-wider">
-                                Admin Area
-                            </p>
-                            <div class="mt-2 space-y-1">
-                                    <Link
-                                    v-for="item in admin"
-                                    :key="item.name"
-                                        :href="item.href"
-                                    class="flex items-center px-3 py-2 text-sm text-light-text dark:text-dark-text hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 rounded-lg transition-colors"
-                                    >
-                                        <component
-                                            :is="item.icon"
-                                        class="h-5 w-5 mr-2"
-                                        />
-                                        {{ item.name }}
-                                    </Link>
-                            </div>
-                        </div>
-                    </div>
+                    <AppNavigation v-if="authenticatedUser" :user="authenticatedUser" />
                 </nav>
 
                 <!-- Bottom Section with User Profile -->
@@ -193,19 +163,19 @@ const toggleDarkMode = () => {
                         </button>
 
                     <!-- User Profile -->
-                    <div v-if="userData" class="relative">
+                    <div v-if="authenticatedUser" class="relative">
                         <button 
                             @click="isProfileMenuOpen = !isProfileMenuOpen"
                             class="flex items-center w-full px-2 py-2 text-sm text-light-text dark:text-dark-text rounded-lg hover:bg-light-card dark:hover:bg-dark-card transition-colors"
                         >
                             <img
-                                :src="userData.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random&color=fff`"
-                                :alt="userData.name"
+                                :src="authenticatedUser.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(authenticatedUser.name)}&background=random&color=fff`"
+                                :alt="authenticatedUser.name"
                                 class="h-8 w-8 rounded-full object-cover"
                             />
                             <div class="ml-3 flex-1 text-left">
-                                <p class="text-sm font-medium text-light-text dark:text-dark-text">{{ userData.name }}</p>
-                                <p class="text-xs text-light-text/60 dark:text-dark-text/60">{{ userData.email }}</p>
+                                <p class="text-sm font-medium text-light-text dark:text-dark-text">{{ authenticatedUser.name }}</p>
+                                <p class="text-xs text-light-text/60 dark:text-dark-text/60">{{ authenticatedUser.email }}</p>
                                         </div>
                                         <svg 
                                 class="h-5 w-5 text-light-text/60 dark:text-dark-text/60 transition-transform duration-200" 

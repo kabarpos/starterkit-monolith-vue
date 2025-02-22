@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleAndPermissionSeeder::class, // Jalankan ini dulu untuk membuat role
             SuperAdminSeeder::class, // Kemudian buat super admin
+            SettingsSeeder::class,
         ]);
     }
 }

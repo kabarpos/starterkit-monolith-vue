@@ -36,5 +36,7 @@ Route::middleware(['auth', 'verified', 'user_status'])->group(function () {
         Route::put('users/{user}/ban', [UserController::class, 'ban'])->name('users.ban');
         // Roles Management
         Route::resource('roles', RoleController::class);
+        Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     });
 });

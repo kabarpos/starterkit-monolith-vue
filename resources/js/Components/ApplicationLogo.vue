@@ -3,7 +3,7 @@ const props = defineProps({
     class: String,
     src: {
         type: String,
-        default: "/storage/logo.png", // fallback logo path
+        default: "/images/logo-default.svg", // fallback logo path
     },
 });
 </script>
@@ -14,7 +14,7 @@ const props = defineProps({
             :src="src"
             :alt="'Application Logo'"
             class="h-full w-full object-contain"
-            @error="$event.target.src = '/assets/logo-default.svg'"
+            @error="$event.target.src = '/images/logo-default.svg'"
         />
     </div>
 </template>
