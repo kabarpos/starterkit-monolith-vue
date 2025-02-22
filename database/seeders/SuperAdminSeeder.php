@@ -17,6 +17,7 @@ class SuperAdminSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
             'phone' => '081234567890',
+            
         ]);
 
         // Assign role admin to super admin

@@ -4,9 +4,22 @@
     <AuthenticatedLayout :auth="auth">
         <template #header>
             <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-bold text-[var(--text-primary)]">
+                <h2 class="text-lg md:text-xl font-semibold text-[var(--text-primary)] truncate">
                     Tambah Role Baru
                 </h2>
+                <Link
+                    :href="route('admin.roles.create')"
+                    class="inline-flex items-center"
+                >
+                    <PrimaryButton>
+                        <span class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="ml-2">Tambah Role</span>
+                        </span>
+                    </PrimaryButton>
+                </Link>
             </div>
         </template>
 
@@ -41,10 +54,10 @@
                         />
                     </div>
 
-                    <div class="overflow-x-auto border border-[var(--border-color)] rounded-lg">
-                        <table class="min-w-full divide-y divide-[var(--border-color)]">
-                            <thead class="bg-[var(--bg-secondary)]">
-                                <tr>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="border-b border-gray-200/50 dark:border-gray-700/25">
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
                                         Module
                                     </th>
@@ -62,9 +75,9 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-[var(--bg-primary)] divide-y divide-[var(--border-color)]">
+                            <tbody>
                                 <!-- Users Module -->
-                                <tr v-show="showModule('users')">
+                                <tr v-show="showModule('users')" class="border-b border-gray-200/50 dark:border-gray-700/25 hover:bg-[var(--bg-secondary)]/50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--text-primary)]">
                                         Users
                                     </td>
@@ -98,7 +111,7 @@
                                     </td>
                                 </tr>
                                 <!-- Roles Module -->
-                                <tr v-show="showModule('roles')">
+                                <tr v-show="showModule('roles')" class="border-b border-gray-200/50 dark:border-gray-700/25 hover:bg-[var(--bg-secondary)]/50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--text-primary)]">
                                         Roles
                                     </td>
@@ -139,17 +152,18 @@
                 <div class="flex items-center justify-end gap-4 mt-6">
                     <Link
                         :href="route('admin.roles.index')"
-                        class="px-4 py-2 text-sm font-medium text-[var(--text-primary)] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                     >
                         Batal
                     </Link>
-                    <PrimaryButton
+                    <button
+                        type="submit"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
-                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-all duration-200"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-25"
                     >
                         Simpan
-                    </PrimaryButton>
+                    </button>
                 </div>
             </form>
         </Card>
@@ -166,6 +180,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 
 const props = defineProps({
     auth: {

@@ -52,17 +52,17 @@
                 <div>
                     <InputLabel for="roles" value="Role" />
                     <div class="mt-2 grid grid-cols-2 gap-4">
-                        <label v-for="role in roles" :key="role.id || role" class="relative flex items-start">
+                        <label v-for="role in roles" :key="role.id || role" class="relative flex items-start p-2 hover:bg-[var(--bg-secondary)]/50 rounded-lg cursor-pointer">
                             <div class="flex items-center h-5">
                                 <input
                                     type="checkbox"
                                     :value="getRoleName(role)"
                                     v-model="form.roles"
-                                    class="h-4 w-4 rounded border-light-border dark:border-dark-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:bg-dark-card"
+                                    class="w-5 h-5 rounded border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--primary-600)] focus:ring-[var(--primary-500)]"
                                 />
                             </div>
                             <div class="ml-3 text-sm">
-                                <span class="font-medium text-light-text dark:text-dark-text">{{ getRoleName(role) }}</span>
+                                <span class="font-medium text-[var(--text-primary)]">{{ getRoleName(role) }}</span>
                             </div>
                         </label>
                     </div>
@@ -74,13 +74,14 @@
                     <select
                         id="status"
                         v-model="form.status"
-                        class="mt-1 block w-full rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                        class="mt-1 block w-full rounded-lg border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)]"
+                        required
                     >
                         <option 
                             v-for="option in statusOptions" 
                             :key="option.value"
                             :value="option.value"
-                            class="text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg"
+                            class="bg-[var(--bg-secondary)] text-[var(--text-primary)]"
                         >
                             {{ option.label }}
                         </option>
@@ -94,7 +95,7 @@
                     <textarea
                         id="status_reason"
                         v-model="form.status_reason"
-                        class="mt-1 block w-full rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
+                        class="mt-1 block w-full rounded-lg border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)]"
                         rows="3"
                         required
                         :placeholder="getStatusReasonPlaceholder()"
@@ -102,23 +103,20 @@
                     <InputError :message="form.errors.status_reason" class="mt-2" />
                 </div>
 
-                <div class="flex items-center justify-end gap-4">
+                <div class="flex justify-end gap-3">
                     <Link
                         :href="route('admin.users.index')"
-                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                     >
                         Batal
                     </Link>
-                    <PrimaryButton
+                    <button
                         type="submit"
                         :disabled="form.processing"
-                        variant="primary"
-                        size="md"
-                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-25"
                     >
-                        <span v-if="form.processing">Memproses...</span>
-                        <span v-else>Simpan Perubahan</span>
-                    </PrimaryButton>
+                        {{ form.processing ? 'Menyimpan...' : 'Simpan' }}
+                    </button>
                 </div>
             </form>
         </Card>
@@ -133,6 +131,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { computed } from 'vue';
 
 const props = defineProps({

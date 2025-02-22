@@ -76,14 +76,14 @@
                 <div>
                     <InputLabel for="roles" value="Role" />
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <label v-for="role in roles" :key="role.id" class="inline-flex items-center space-x-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer">
+                        <label v-for="role in roles" :key="role.id" class="inline-flex items-center space-x-3 p-2 hover:bg-[var(--bg-secondary)]/50 rounded-lg cursor-pointer">
                             <input
                                 type="checkbox"
                                 :value="role.name"
                                 v-model="form.roles"
-                                class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400"
+                                class="w-5 h-5 rounded border-[var(--border-primary)] bg-[var(--bg-secondary)] text-[var(--primary-600)] focus:ring-[var(--primary-500)]"
                             />
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ getRoleLabel(role.name) }}</span>
+                            <span class="text-sm font-medium text-[var(--text-primary)]">{{ getRoleLabel(role.name) }}</span>
                         </label>
                     </div>
                     <InputError :message="form.errors.roles" class="mt-2" />
@@ -108,20 +108,19 @@
                     <InputError :message="form.errors.status" class="mt-2" />
                 </div>
 
-                <div class="flex items-center justify-end gap-4">
+                <div class="flex justify-end gap-3">
                     <Link
                         :href="route('admin.users.index')"
-                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                     >
                         Batal
                     </Link>
                     <button
                         type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
                         :disabled="form.processing"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-25"
                     >
-                        <span v-if="form.processing">Memproses...</span>
-                        <span v-else>Simpan</span>
+                        {{ form.processing ? 'Menyimpan...' : 'Simpan' }}
                     </button>
                 </div>
             </form>
@@ -136,6 +135,8 @@ import Card from '@/Components/Card.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     auth: {

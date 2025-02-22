@@ -13,13 +13,13 @@
                     <!-- Tombol responsif -->
                     <Link
                         :href="route('admin.roles.create')"
-                        class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-colors duration-200"
+                        class="inline-flex items-center px-3 py-2 md:px-4 md:py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
                     >
-                        <span class="flex items-center px-3 py-2 md:px-4 md:py-2">
+                        <span class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                             </svg>
-                            <span class="hidden md:inline ml-2 text-sm">Tambah Role</span>
+                            <span class="hidden md:inline ml-2">Tambah Role</span>
                         </span>
                     </Link>
                 </div>
@@ -91,16 +91,16 @@
                                     <div class="flex justify-end gap-3">
                                         <Link
                                             :href="route('admin.roles.edit', role.id)"
-                                            class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200"
                                         >
                                             Edit
                                         </Link>
                                         <button
                                             v-if="role.name !== 'admin'"
                                             @click="confirmRoleDeletion(role)"
-                                            class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200"
                                         >
-                                            Hapus
+                                            Delete
                                         </button>
                                     </div>
                                 </td>
@@ -123,18 +123,21 @@
                 </p>
 
                 <div class="mt-6 flex justify-end gap-4">
-                    <SecondaryButton @click="closeModal" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <button 
+                        @click="closeModal" 
+                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                    >
                         Batal
-                    </SecondaryButton>
+                    </button>
 
-                    <DangerButton
+                    <button
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="deleteRole"
-                        class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-25"
                     >
                         Hapus Role
-                    </DangerButton>
+                    </button>
                 </div>
             </div>
         </Modal>

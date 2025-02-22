@@ -13,13 +13,13 @@
                     <!-- Tombol responsif -->
                     <Link
                         :href="route('admin.users.create')"
-                        class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition-colors duration-200"
+                        class="inline-flex items-center px-3 py-2 md:px-4 md:py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
                     >
-                        <span class="flex items-center px-3 py-2 md:px-4 md:py-2">
+                        <span class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                             </svg>
-                            <span class="hidden md:inline ml-2 text-sm">Tambah Pengguna</span>
+                            <span class="hidden md:inline ml-2">Tambah Pengguna</span>
                         </span>
                     </Link>
                 </div>
@@ -42,31 +42,37 @@
                     
                     <!-- Filter buttons -->
                     <div class="flex flex-col md:flex-row gap-3">
-                        <select
-                            v-model="filters.role"
-                            class="w-full md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
-                        >
-                            <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Role</option>
-                            <option 
-                                v-for="role in roles" 
-                                :key="role" 
-                                :value="role" 
-                                class="bg-light-bg dark:bg-dark-bg capitalize"
+                        <div class="relative">
+                            <select
+                                v-model="filters.role"
+                                class="w-full md:w-40 appearance-none rounded-lg border border-gray-200/50 dark:border-gray-700/25 bg-[var(--bg-primary)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)] pl-3 pr-10 py-2 cursor-pointer transition-colors duration-200"
                             >
-                                {{ getRoleLabel(role) }}
-                            </option>
-                        </select>
-                        <select
-                            v-model="filters.status"
-                            class="w-full md:w-40 rounded-lg border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:border-primary-500 focus:ring-primary-500 dark:focus:ring-primary-600"
-                        >
-                            <option value="" class="bg-light-bg dark:bg-dark-bg">Semua Status</option>
-                            <option value="pending" class="bg-light-bg dark:bg-dark-bg">Pending</option>
-                            <option value="active" class="bg-light-bg dark:bg-dark-bg">Aktif</option>
-                            <option value="rejected" class="bg-light-bg dark:bg-dark-bg">Ditolak</option>
-                            <option value="banned" class="bg-light-bg dark:bg-dark-bg">Diblokir</option>
-                            <option value="inactive" class="bg-light-bg dark:bg-dark-bg">Nonaktif</option>
-                        </select>
+                                <option value="" class="py-2">Semua Role</option>
+                                <option 
+                                    v-for="role in roles" 
+                                    :key="role" 
+                                    :value="role" 
+                                    class="py-2"
+                                >
+                                    {{ getRoleLabel(role) }}
+                                </option>
+                            </select>
+                           
+                        </div>
+                        <div class="relative">
+                            <select
+                                v-model="filters.status"
+                                class="w-full md:w-40 appearance-none rounded-lg border border-gray-200/50 dark:border-gray-700/25 bg-[var(--bg-primary)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] focus:border-[var(--primary-500)] focus:ring-[var(--primary-500)] pl-3 pr-10 py-2 cursor-pointer transition-colors duration-200"
+                            >
+                                <option value="" class="py-2">Semua Status</option>
+                                <option value="pending" class="py-2">Pending</option>
+                                <option value="active" class="py-2">Aktif</option>
+                                <option value="rejected" class="py-2">Ditolak</option>
+                                <option value="banned" class="py-2">Diblokir</option>
+                                <option value="inactive" class="py-2">Nonaktif</option>
+                            </select>
+                           
+                        </div>
                     </div>
                 </div>
             </Card>
@@ -150,23 +156,23 @@
                                 <!-- Actions -->
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end gap-2 sm:gap-3">
-                                                <Link 
-                                                    :href="route('admin.users.edit', user.id)"
+                                        <Link
+                                            :href="route('admin.users.edit', user.id)"
                                             class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200"
-                                                >
-                                                    Edit
-                                                </Link>
-                                                <button 
+                                        >
+                                            Edit
+                                        </Link>
+                                        <button 
                                             @click="confirmUserDeletion(user)"
                                             class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200"
-                                                >
-                                                    Hapus
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </Card>
         </div>
@@ -183,18 +189,24 @@
                 </p>
 
                 <div class="mt-6 flex justify-end gap-4">
-                    <SecondaryButton @click="closeModal">
+                    <SecondaryButton 
+                        @click="closeModal"
+                        variant="outline"
+                        type="button"
+                        class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                    >
                         Batal
                     </SecondaryButton>
 
-                    <DangerButton
-                        class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600"
+                    <PrimaryButton
+                        variant="danger"
                         :class="{ 'opacity-25': processing }"
                         :disabled="processing"
                         @click="deleteUser"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-25"
                     >
-                        Hapus Pengguna
-                    </DangerButton>
+                        {{ processing ? 'Menghapus...' : 'Hapus Pengguna' }}
+                    </PrimaryButton>
                 </div>
             </div>
         </Modal>
@@ -347,15 +359,25 @@ const getRoleLabel = (role) => {
 </script>
 
 <style scoped>
-/* Styling untuk select dropdown */
 select {
-    min-width: 150px;
-    padding: 0.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+select::-ms-expand {
+    display: none;
 }
 
 select option {
-    padding: 8px;
-    margin: 4px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+}
+
+.dark select option {
+    background-color: #1f2937;
+    color: #fff;
 }
 
 /* Transisi halus untuk perubahan tema */

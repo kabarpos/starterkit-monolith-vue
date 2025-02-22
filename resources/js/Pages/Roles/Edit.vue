@@ -41,10 +41,10 @@
                         />
                     </div>
 
-                    <div class="overflow-x-auto border border-[var(--border-color)] rounded-lg">
-                        <table class="min-w-full divide-y divide-[var(--border-color)]">
-                            <thead class="bg-[var(--bg-secondary)]">
-                                <tr>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="border-b border-gray-200/50 dark:border-gray-700/25">
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider">
                                         Module
                                     </th>
@@ -62,9 +62,9 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-[var(--bg-primary)] divide-y divide-[var(--border-color)]">
+                            <tbody>
                                 <!-- Users Module -->
-                                <tr v-show="showModule('users')">
+                                <tr v-show="showModule('users')" class="border-b border-gray-200/50 dark:border-gray-700/25 hover:bg-[var(--bg-secondary)]/50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--text-primary)]">
                                         Users
                                     </td>
@@ -98,7 +98,7 @@
                                     </td>
                                 </tr>
                                 <!-- Roles Module -->
-                                <tr v-show="showModule('roles')">
+                                <tr v-show="showModule('roles')" class="border-b border-gray-200/50 dark:border-gray-700/25 hover:bg-[var(--bg-secondary)]/50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--text-primary)]">
                                         Roles
                                     </td>
