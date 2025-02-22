@@ -2,11 +2,6 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { Link, router, usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import DarkModeToggle from '@/Components/DarkModeToggle.vue';
 import AppNavigation from '@/Components/Navigation/AppNavigation.vue';
 import { Head } from "@inertiajs/vue3";
 
@@ -97,20 +92,24 @@ const toggleDarkMode = () => {
     isDark.value = !isDark.value;
 };
 
-// Computed untuk website settings
+// Perbaiki websiteSettings computed
 const websiteSettings = computed(() => ({
-    title: usePage().props.settings?.site_title || 'Website',
-    logo: usePage().props.settings?.site_logo || null,
+    title: usePage().props.settings?.site_title || 'Application', // Sesuaikan dengan ApplicationLogo
     favicon: usePage().props.settings?.site_favicon || null
 }));
 
-// Computed untuk logo URL
-const logoUrl = computed(() => {
-    if (websiteSettings.value.logo) {
-        return `/storage/${websiteSettings.value.logo}`;
+// Watch untuk perubahan settings
+watch(() => usePage().props.settings, (newSettings) => {
+    if (newSettings) {
+        // Update favicon jika berubah
+        if (newSettings.site_favicon) {
+            const link = document.querySelector("link[rel~='icon']");
+            if (link) {
+                link.href = `/storage/${newSettings.site_favicon}`;
+            }
+        }
     }
-    return null;
-});
+}, { deep: true });
 </script>
 
 <template>
@@ -124,15 +123,7 @@ const logoUrl = computed(() => {
         >
             <!-- Sidebar header -->
             <div class="flex h-16 shrink-0 items-center px-6 border-b border-light-border dark:border-dark-border">
-                <!-- Show uploaded logo if exists, otherwise show default ApplicationLogo -->
-                <img 
-                    v-if="logoUrl"
-                    :src="logoUrl"
-                    :alt="websiteSettings.title"
-                    class="h-8 w-auto"
-                />
-                <ApplicationLogo v-else class="h-8 w-auto text-primary-500" />
-                
+                <ApplicationLogo class="h-8 w-auto text-primary-500" />
                 <span class="ml-2 text-xl font-semibold text-primary-500">
                     {{ websiteSettings.title }}
                 </span>

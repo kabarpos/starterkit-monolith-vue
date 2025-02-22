@@ -7,13 +7,17 @@ const props = defineProps({
     settings: {
         type: Object,
         required: true
+    },
+    auth: {
+        type: Object,
+        required: true
     }
 });
 
 const form = ref({});
 const processing = ref(false);
 
-// Inisialisasi form data dari settings
+// Gunakan cara yang sama dengan Index.vue untuk inisialisasi form
 Object.entries(props.settings).forEach(([group, groupSettings]) => {
     groupSettings.forEach(setting => {
         form.value[setting.key] = setting.value;
@@ -22,17 +26,12 @@ Object.entries(props.settings).forEach(([group, groupSettings]) => {
 
 const submit = () => {
     processing.value = true;
-    
-    // Buat FormData untuk handling file upload
     const formData = new FormData();
     
-    // Append semua data ke FormData
     Object.entries(form.value).forEach(([key, value]) => {
-        // Jika value adalah File object, append sebagai file
         if (value instanceof File) {
             formData.append(key, value);
         } 
-        // Jika bukan file, append sebagai string
         else if (value !== null && value !== undefined) {
             formData.append(key, value.toString());
         }
@@ -42,6 +41,7 @@ const submit = () => {
         preserveScroll: true,
         onSuccess: () => {
             processing.value = false;
+            window.location.reload();
         },
         onError: () => {
             processing.value = false;
@@ -49,7 +49,6 @@ const submit = () => {
     });
 };
 
-// Handle file input change
 const handleFileChange = (key, event) => {
     const file = event.target.files[0];
     if (file) {
@@ -57,7 +56,6 @@ const handleFileChange = (key, event) => {
     }
 };
 
-// Tambahkan computed untuk asset URL
 const getAssetUrl = (path) => {
     if (!path) return null;
     return `/storage/${path}`;
@@ -65,13 +63,17 @@ const getAssetUrl = (path) => {
 </script>
 
 <template>
-    <Head title="Website Settings" />
+    <Head title="Users" />
 
-    <AuthenticatedLayout title="Website Settings">
+    <AuthenticatedLayout :auth="auth" title="Manajemen Pengguna">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Website Settings
-            </h2>
+            <div class="w-full">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg md:text-xl font-semibold text-[var(--text-primary)] truncate">
+                        Manajemen Pengguna
+                    </h2>
+                </div>
+            </div>
         </template>
 
         <div class="py-12">
