@@ -1,7 +1,7 @@
 <script setup>
 import { Head, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     settings: {
@@ -17,7 +17,17 @@ const props = defineProps({
 const form = ref({});
 const processing = ref(false);
 
-// Gunakan cara yang sama dengan Index.vue untuk inisialisasi form
+// Computed untuk mendapatkan current settings dari form
+const currentSettings = computed(() => {
+    const general = props.settings.general || [];
+    const settingValues = {};
+    general.forEach(setting => {
+        settingValues[setting.key] = form.value[setting.key];
+    });
+    return settingValues;
+});
+
+// Inisialisasi form dengan nilai dari settings
 Object.entries(props.settings).forEach(([group, groupSettings]) => {
     groupSettings.forEach(setting => {
         form.value[setting.key] = setting.value;
@@ -63,14 +73,18 @@ const getAssetUrl = (path) => {
 </script>
 
 <template>
-    <Head title="Users" />
+    <Head title="Pengaturan Website" />
 
-    <AuthenticatedLayout :auth="auth" title="Manajemen Pengguna">
+    <AuthenticatedLayout 
+        :auth="auth" 
+        title="Pengaturan Website"
+        :settings="currentSettings"
+    >
         <template #header>
             <div class="w-full">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg md:text-xl font-semibold text-[var(--text-primary)] truncate">
-                        Manajemen Pengguna
+                        Pengaturan Website
                     </h2>
                 </div>
             </div>

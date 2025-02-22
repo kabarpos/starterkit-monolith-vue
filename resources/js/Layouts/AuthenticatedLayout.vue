@@ -13,6 +13,14 @@ const props = defineProps({
     title: {
         type: String,
         required: true
+    },
+    auth: {
+        type: Object,
+        required: true
+    },
+    settings: {
+        type: Object,
+        default: () => ({})
     }
 });
 
@@ -92,11 +100,17 @@ const toggleDarkMode = () => {
     isDark.value = !isDark.value;
 };
 
-// Perbaiki websiteSettings computed
+// Computed untuk title dan logo dari settings yang diberikan
 const websiteSettings = computed(() => ({
-    title: usePage().props.settings?.site_title || 'Application', // Sesuaikan dengan ApplicationLogo
-    favicon: usePage().props.settings?.site_favicon || null
+    title: props.settings?.site_title || usePage().props.settings?.site_title || 'Application',
+    logo: props.settings?.site_logo || usePage().props.settings?.site_logo || null,
+    favicon: props.settings?.site_favicon || usePage().props.settings?.site_favicon || null
 }));
+
+const getAssetUrl = (path) => {
+    if (!path) return null;
+    return `/storage/${path}`;
+};
 
 // Watch untuk perubahan settings
 watch(() => usePage().props.settings, (newSettings) => {
@@ -123,7 +137,13 @@ watch(() => usePage().props.settings, (newSettings) => {
         >
             <!-- Sidebar header -->
             <div class="flex h-16 shrink-0 items-center px-6 border-b border-light-border dark:border-dark-border">
-                <ApplicationLogo class="h-8 w-auto text-primary-500" />
+                <img 
+                    v-if="websiteSettings.logo" 
+                    :src="getAssetUrl(websiteSettings.logo)" 
+                    class="h-8 w-auto" 
+                    :alt="websiteSettings.title"
+                />
+                <ApplicationLogo v-else class="h-8 w-auto" />
                 <span class="ml-2 text-xl font-semibold text-primary-500">
                     {{ websiteSettings.title }}
                 </span>
