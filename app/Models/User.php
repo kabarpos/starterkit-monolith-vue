@@ -9,10 +9,12 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\HasMeta;
+use App\Traits\HasActivities;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasMeta, HasActivities;
 
     const STATUS_PENDING = 'pending';
     const STATUS_ACTIVE = 'active';

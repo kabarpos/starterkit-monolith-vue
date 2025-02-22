@@ -5,9 +5,20 @@ namespace App\Services;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class PermissionService
 {
+    /**
+     * Permission hierarchy definitions
+     */
+    protected array $permissionHierarchy = [
+        'manage' => ['view', 'create', 'edit', 'delete'],
+        'edit' => ['view'],
+        'delete' => ['view'],
+        'create' => ['view']
+    ];
+
     /**
      * Generate permissions based on routes
      */
@@ -17,14 +28,15 @@ class PermissionService
         $permissions = [];
         
         foreach ($routes as $route) {
-            // Skip routes yang tidak perlu permission
             if ($this->shouldSkipRoute($route)) {
                 continue;
             }
             
+            $routePermissions = $this->generatePermissionsForRoute($route);
             $permissions = array_merge(
                 $permissions,
-                $this->generatePermissionsForRoute($route)
+                $routePermissions,
+                $this->generateInheritedPermissions($routePermissions)
             );
         }
         
@@ -32,6 +44,9 @@ class PermissionService
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
+
+        // Invalidate permission cache
+        $this->clearPermissionCache();
         
         return $permissions;
     }
@@ -143,5 +158,92 @@ class PermissionService
         }
         
         return $modules;
+    }
+
+    /**
+     * Generate inherited permissions based on hierarchy
+     */
+    protected function generateInheritedPermissions(array $permissions): array
+    {
+        $inherited = [];
+        
+        foreach ($permissions as $permission) {
+            // Extract action and resource from permission name
+            preg_match('/^(manage|view|create|edit|delete)(.+)$/', $permission, $matches);
+            
+            if (count($matches) >= 3) {
+                $action = $matches[1];
+                $resource = $matches[2];
+                
+                // If this is a parent permission (e.g., manage)
+                if (isset($this->permissionHierarchy[$action])) {
+                    // Add all child permissions
+                    foreach ($this->permissionHierarchy[$action] as $childAction) {
+                        $inherited[] = $childAction . $resource;
+                    }
+                }
+            }
+        }
+        
+        return array_unique($inherited);
+    }
+
+    /**
+     * Check if a user has permission including inheritance
+     */
+    public function hasPermissionIncludingInheritance($user, string $permission): bool
+    {
+        // Check direct permission first
+        if ($user->hasPermissionTo($permission)) {
+            return true;
+        }
+
+        // Extract action and resource
+        preg_match('/^(view|create|edit|delete)(.+)$/', $permission, $matches);
+        
+        if (count($matches) >= 3) {
+            $action = $matches[1];
+            $resource = $matches[2];
+            
+            // Check if user has parent permissions
+            foreach ($this->permissionHierarchy as $parentAction => $childActions) {
+                if (in_array($action, $childActions)) {
+                    $parentPermission = $parentAction . $resource;
+                    if ($user->hasPermissionTo($parentPermission)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get all permissions including inherited ones for a specific resource
+     */
+    public function getResourcePermissions(string $resource): array
+    {
+        $permissions = [];
+        $baseActions = ['view', 'create', 'edit', 'delete', 'manage'];
+        
+        foreach ($baseActions as $action) {
+            $permissions[$action] = [
+                'name' => $action . ucfirst($resource),
+                'inherits' => isset($this->permissionHierarchy[$action]) 
+                    ? array_map(fn($a) => $a . ucfirst($resource), $this->permissionHierarchy[$action])
+                    : []
+            ];
+        }
+        
+        return $permissions;
+    }
+
+    /**
+     * Clear permission cache
+     */
+    protected function clearPermissionCache(): void
+    {
+        Cache::tags(['permissions', 'spatie.permission.cache'])->flush();
     }
 } 
